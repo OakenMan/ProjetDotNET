@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,10 +9,30 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+struct Article
+{
+    public string RefArticle;
+    public string Description;
+    public string Famille;
+    public int RefFamille;
+    public string SousFamille;
+    public int RefSousFamille;
+    public string Marque;
+    public int RefMarque;
+    public string PrixHT;
+    public string Quantite;
+
+    public override String ToString()
+    {
+        return String.Format("Description : {0} || Ref : {1} || Marque : {2} || Famille : {3} || Sous-Famille : {4} || Prix : {5} ", Description, RefArticle, Marque, Famille, SousFamille, PrixHT);
+    }
+}
+
 namespace Bacchus
 {
     public partial class ImportForm : Form
     {
+        
         public ImportForm()
         {
             InitializeComponent();
@@ -40,8 +61,47 @@ namespace Bacchus
                     FilePath = openFileDialog.FileName;
 
                     FileTextBox.Text = FilePath;
+
+                    List<Article> ListeArticle = Parser(FilePath);
+                    //foreach (Article article in ListeArticle)
+                    //{
+                    //    Console.WriteLine(article);
+                    //}
                 }
             }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="FilePath"></param>
+        /// <returns></returns>
+        private List<Article> Parser(string FilePath)
+        {
+            List<Article> ListeArticle = new List<Article>();
+
+            using (var reader = new StreamReader(FilePath))
+            {
+                //On lit la première ligne pour passer le nom des colonnes
+                var line = reader.ReadLine();
+                while (!reader.EndOfStream)
+                {
+                    line = reader.ReadLine();
+                    var values = line.Split(';');
+
+                    Article article = new Article();
+                    article.Description = values[0];
+                    article.RefArticle = values[1];
+                    article.Marque = values[2];
+                    article.Famille = values[3];
+                    article.SousFamille = values[4];
+                    article.PrixHT = values[5];
+
+                    ListeArticle.Add(article);
+                }
+            }
+
+            return ListeArticle;
         }
 
         /// <summary>
@@ -62,6 +122,34 @@ namespace Bacchus
             //    Text = "Editeur de texte [" + openFileDialog.SafeFileName + "]";
             //    FileModified = false;
             //}
+
+
+
+            //Algorithme :
+            /*
+             * A partir de la liste des articles obtenue grâce au parser :
+             * Pour chaque article :
+             * 
+             *  Lecture de la marque dans la BDD
+                Si elle existe:
+                    On récupère l'ID de la marque et on le stock dans article.RefMarque
+                Sinon: 
+                    On créer l'entrée dans la table "Marque" de la BDD
+                    On récupère l'ID de la marque et on le stock dans article.RefMarque
+
+                Appliquer l'algorithme précédant pour Famille
+
+                Lecture de la sous famille dans la BDD
+                Si elle existe:
+                    On récupère l'ID de la sous famille et on le stock dans article.RefSousFamille
+                Sinon: 
+                    On créer l'entrée dans la table "SousFamilles" de la BDD avec l'aide de la valeur article.RefFamille récupérée précédemment
+                    On récupère l'ID de la sous famille et on le stock dans article.RefSousFamille
+
+                On convertit le string du prix en float
+
+                On ajoute l'article à la BDD
+            */
         }
 
         /// <summary>

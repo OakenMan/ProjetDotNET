@@ -57,7 +57,7 @@
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(559, 107);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(562, 103);
             this.flowLayoutPanel1.TabIndex = 1;
             // 
             // flowLayoutPanel4
@@ -73,7 +73,7 @@
             // 
             this.OpenFileButton.Location = new System.Drawing.Point(3, 3);
             this.OpenFileButton.Name = "OpenFileButton";
-            this.OpenFileButton.Size = new System.Drawing.Size(266, 23);
+            this.OpenFileButton.Size = new System.Drawing.Size(137, 23);
             this.OpenFileButton.TabIndex = 1;
             this.OpenFileButton.Text = "Ouvrir";
             this.OpenFileButton.UseVisualStyleBackColor = true;
@@ -81,9 +81,9 @@
             // 
             // FileTextBox
             // 
-            this.FileTextBox.Location = new System.Drawing.Point(275, 3);
+            this.FileTextBox.Location = new System.Drawing.Point(146, 3);
             this.FileTextBox.Name = "FileTextBox";
-            this.FileTextBox.Size = new System.Drawing.Size(276, 22);
+            this.FileTextBox.Size = new System.Drawing.Size(405, 22);
             this.FileTextBox.TabIndex = 2;
             // 
             // flowLayoutPanel3
@@ -102,7 +102,6 @@
             this.OverwriteDataButton.Size = new System.Drawing.Size(266, 23);
             this.OverwriteDataButton.TabIndex = 3;
             this.OverwriteDataButton.Text = "Écraser les données";
-            this.OverwriteDataButton.UseVisualStyleBackColor = true;
             this.OverwriteDataButton.Click += new System.EventHandler(this.OverwriteDataButton_Click);
             // 
             // AppendDataButton
@@ -119,8 +118,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(559, 107);
+            this.ClientSize = new System.Drawing.Size(562, 103);
             this.Controls.Add(this.flowLayoutPanel1);
+            this.MaximumSize = new System.Drawing.Size(580, 150);
+            this.MinimumSize = new System.Drawing.Size(580, 150);
             this.Name = "ImportForm";
             this.Text = "Importer un fichier SQL";
             this.flowLayoutPanel1.ResumeLayout(false);

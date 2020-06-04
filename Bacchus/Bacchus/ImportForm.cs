@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SQLite;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -52,16 +53,17 @@ namespace Bacchus
         /// <param name="e"></param>
         private void OverwriteDataButton_Click(object sender, EventArgs e)
         {
-            //Read the contents of the file into a stream
-            //var fileStream = openFileDialog.OpenFile();
+            string DatabasePath = "Data Source = Bacchus.SQLite;";
+            string SQLCommand = "INSERT INTO Articles (RefArticle, Description, RefSousFamille, RefMarque, PrixHT, Quantite) " +
+                "VALUES('F6456', 'description', 456, 789, 2.99, 10);";
 
-            //using (StreamReader reader = new StreamReader(fileStream))
-            //{
-            //    fileContent = reader.ReadToEnd();
-            //    textBox1.Text = fileContent;
-            //    Text = "Editeur de texte [" + openFileDialog.SafeFileName + "]";
-            //    FileModified = false;
-            //}
+            using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
+            {
+                SQLiteCommand Command = new SQLiteCommand(SQLCommand, Connection);
+                Connection.Open();
+
+                int result = Command.ExecuteNonQuery();
+            }
         }
 
         /// <summary>

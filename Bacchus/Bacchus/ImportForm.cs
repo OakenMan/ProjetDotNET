@@ -25,7 +25,23 @@ namespace Bacchus
         /// <param name="e"></param>
         private void OpenFileButton_Click(object sender, EventArgs e)
         {
+            var FilePath = string.Empty;
 
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.InitialDirectory = "c:\\";
+                openFileDialog.Filter = "csv files (*.csv)|*.csv|All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 2;
+                openFileDialog.RestoreDirectory = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    //Get the path of specified file
+                    FilePath = openFileDialog.FileName;
+
+                    FileTextBox.Text = FilePath;
+                }
+            }
         }
 
         /// <summary>
@@ -36,7 +52,16 @@ namespace Bacchus
         /// <param name="e"></param>
         private void OverwriteDataButton_Click(object sender, EventArgs e)
         {
+            //Read the contents of the file into a stream
+            //var fileStream = openFileDialog.OpenFile();
 
+            //using (StreamReader reader = new StreamReader(fileStream))
+            //{
+            //    fileContent = reader.ReadToEnd();
+            //    textBox1.Text = fileContent;
+            //    Text = "Editeur de texte [" + openFileDialog.SafeFileName + "]";
+            //    FileModified = false;
+            //}
         }
 
         /// <summary>

@@ -24,5 +24,16 @@ namespace Bacchus
         {
 
         }
+
+        /// <summary>
+        /// Fonction appelée en cliquant sur le menu "Importer"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void importerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ImportForm Form = new ImportForm();
+            Form.Show();
+        }
     }
 }

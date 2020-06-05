@@ -10,25 +10,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-struct Article  // à remplacer par une classe si possible ça sera plus simple à gérer ensuite
-{
-    public string RefArticle;
-    public string Description;
-    public string Famille;
-    public int RefFamille;
-    public string SousFamille;
-    public int RefSousFamille;
-    public string Marque;
-    public int RefMarque;
-    public string PrixHT;   // à remplacer par un float
-    public string Quantite; // à remplacer par un int
-
-    public override String ToString()
-    {
-        return String.Format("Description : {0} || Ref : {1} || Marque : {2} || Famille : {3} || Sous-Famille : {4} || Prix : {5} ", Description, RefArticle, Marque, Famille, SousFamille, PrixHT);
-    }
-}
-
 namespace Bacchus
 {
     public partial class ImportForm : Form
@@ -52,7 +33,7 @@ namespace Bacchus
             using (OpenFileDialog FileDialog = new OpenFileDialog())
             {
                 // Paramètres du FileDialog
-                FileDialog.InitialDirectory = "c:\\";
+                FileDialog.InitialDirectory = "C:\\Users\\tom\\Downloads";
                 FileDialog.Filter = "csv files (*.csv)|*.csv|All files (*.*)|*.*";
                 FileDialog.FilterIndex = 0;
                 FileDialog.RestoreDirectory = true;
@@ -63,13 +44,8 @@ namespace Bacchus
                     // On récupère le nom de fichier
                     FilePath = FileDialog.FileName;
 
-                    // On l'affiche dans la TextBox
-                    FileTextBox.Text = FilePath;
-
-                    // On parse le fichier 
-                    // TODO: gestion d'erreur de format ?
-                    // TODO : mettre ListeArticles en attribut de ImportForm ?
-                    List<Article> ListeArticle = Parser(FilePath);
+                    // Et on l'affiche dans la TextBox
+                    FileTextBox.Text = FilePath; 
                 }
             }
         }
@@ -92,13 +68,16 @@ namespace Bacchus
                     line = reader.ReadLine();
                     var values = line.Split(';');
 
-                    Article article = new Article();
-                    article.Description = values[0];
-                    article.RefArticle = values[1];
-                    article.Marque = values[2];
-                    article.Famille = values[3];
-                    article.SousFamille = values[4];
-                    article.PrixHT = values[5];
+                    Article article = new Article
+                    {
+                        Description = values[0],
+                        RefArticle = values[1],
+                        Marque = values[2],
+                        Famille = values[3],
+                        SousFamille = values[4],
+                        PrixHT = float.Parse(values[5]),
+                        Quantite = 0
+                    };
 
                     ListeArticle.Add(article);
                 }
@@ -115,35 +94,16 @@ namespace Bacchus
         /// <param name="e"></param>
         private void OverwriteDataButton_Click(object sender, EventArgs e)
         {
+            // TODO : vider la BDD
+
+            List<Article> ListeArticle = Parser(FileTextBox.Text);
+            Console.WriteLine("Lecture de {0} articles", ListeArticle.Count);
+
             DAO dao = new DAO();
-            int id = dao.GetRefMarque("Linux");
-            Console.WriteLine("Id of Linux = "+ id);
-
-            //Algorithme :
-            /*
-             * A partir de la liste des articles obtenue grâce au parser :
-             * Pour chaque article :
-             * 
-             *  Lecture de la marque dans la BDD
-                Si elle existe:
-                    On récupère l'ID de la marque et on le stock dans article.RefMarque
-                Sinon: 
-                    On créer l'entrée dans la table "Marque" de la BDD
-                    On récupère l'ID de la marque et on le stock dans article.RefMarque
-
-                Appliquer l'algorithme précédant pour Famille
-
-                Lecture de la sous famille dans la BDD
-                Si elle existe:
-                    On récupère l'ID de la sous famille et on le stock dans article.RefSousFamille
-                Sinon: 
-                    On créer l'entrée dans la table "SousFamilles" de la BDD avec l'aide de la valeur article.RefFamille récupérée précédemment
-                    On récupère l'ID de la sous famille et on le stock dans article.RefSousFamille
-
-                On convertit le string du prix en float
-
-                On ajoute l'article à la BDD
-            */
+            foreach(Article NewArticle in ListeArticle) 
+            {
+                dao.AddArticle(NewArticle.RefArticle, NewArticle.Description, NewArticle.Marque, NewArticle.Famille, NewArticle.SousFamille, NewArticle.PrixHT, NewArticle.Quantite);
+            }
         }
 
         /// <summary>
@@ -154,7 +114,14 @@ namespace Bacchus
         /// <param name="e"></param>
         private void AppendDataButton_Click(object sender, EventArgs e)
         {
+            List<Article> ListeArticle = Parser(FileTextBox.Text);
+            Console.WriteLine("Lecture de {0} articles", ListeArticle.Count);
 
+            DAO dao = new DAO();
+            foreach (Article NewArticle in ListeArticle)
+            {
+                dao.AddArticle(NewArticle.RefArticle, NewArticle.Description, NewArticle.Marque, NewArticle.Famille, NewArticle.SousFamille, NewArticle.PrixHT, NewArticle.Quantite);
+            }
         }
     }
 }

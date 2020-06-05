@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SQLite;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,9 @@ namespace Bacchus
         private const string DatabasePath = "Data Source = Bacchus.SQLite;";
         private SQLiteConnection Connection;
 
+        /// <summary>
+        /// Constructeur du DAO, initialise la connexion avec la BDD SQLite.
+        /// </summary>
         public DAO()
         {
             try
@@ -26,13 +30,13 @@ namespace Bacchus
         }
 
         /// <summary>
-        /// Ajoute "NewArticle" à la BDD. 
+        /// Ajoute le nouvel article à la BDD. 
         /// Si il est déjà présent (= RefArticle identique), les autres champs sont mis à jour.
         /// </summary>
         /// <param name="NewArticle"></param>
-        public void AddArticle(Article NewArticle)
+        public void AddArticle(string RefArticle, string Description, string Marque, string Famille, string SousFamille, float PrixHT, int Quantite)
         {
-            string Cmd = "SELECT * FROM Articles WHERE RefArticle = '" + NewArticle.RefArticle + "'";
+            string Cmd = "SELECT * FROM Articles WHERE RefArticle = '" + RefArticle + "'";
             SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
 
             using (SQLiteDataReader Reader = Command.ExecuteReader())
@@ -40,21 +44,35 @@ namespace Bacchus
                 // Si l'article existe déjà, on le met à jour
                 if (Reader.Read())
                 {
-                    // Je ferais ça plus tard
+                    Console.WriteLine("L'article {0} existe déjà, on le met à jour", RefArticle);
                 }
                 // Si l'article n'existe pas dans la BDD, on l'ajoute
                 else
                 {
-                    // Déso c'est crade j'essayerais d'utiliser des SQLiteParameters plus tard
+                    Console.WriteLine("Ajout de l'article {0}", RefArticle);
+
+                    int RefMarque = GetRefMarque(Marque);
+                    int RefFamille = GetRefFamille(Famille);
+                    int RefSousFamille = GetRefSousFamille(RefFamille, SousFamille);
+
                     Cmd = "INSERT INTO Articles (RefArticle, Description, RefSousFamille, RefMarque, PrixHT, Quantite) " +
-                        "VALUES('" + NewArticle.RefArticle +
-                        "', '" + NewArticle.Description +
-                        "', " + NewArticle.RefSousFamille +
-                        ", " + NewArticle.RefMarque +
-                        ", " + NewArticle.PrixHT +
-                        ", " + NewArticle.Quantite +
-                        ");";
+                        "VALUES(@RefArticle, @Description, @RefSousFamille, @RefMarque, @PrixHT, @Quantite);";
+
                     Command = new SQLiteCommand(Cmd, Connection);
+
+                    SQLiteParameter RefArticleParam = new SQLiteParameter("@RefArticle", DbType.String) { Value = RefArticle };
+                    SQLiteParameter DescriptionParam = new SQLiteParameter("@Description", DbType.String) { Value = Description };
+                    SQLiteParameter RefSousFamilleParam = new SQLiteParameter("@RefSousFamille", DbType.Int16) { Value = RefSousFamille };
+                    SQLiteParameter RefMarqueParam = new SQLiteParameter("@RefMarque", DbType.Int16) { Value = RefMarque };
+                    SQLiteParameter PrixHTParam = new SQLiteParameter("@PrixHT", DbType.Decimal) { Value = PrixHT };
+                    SQLiteParameter QuantiteParam = new SQLiteParameter("@Quantite", DbType.Int16) { Value = Quantite };
+
+                    Command.Parameters.Add(RefArticleParam);
+                    Command.Parameters.Add(DescriptionParam);
+                    Command.Parameters.Add(RefSousFamilleParam);
+                    Command.Parameters.Add(RefMarqueParam);
+                    Command.Parameters.Add(PrixHTParam);
+                    Command.Parameters.Add(QuantiteParam);
 
                     int result = Command.ExecuteNonQuery();
                 }
@@ -75,21 +93,22 @@ namespace Bacchus
             {
                 if (Reader.Read()) {
 
-                    Article NewArticle = new Article();
+                    Article NewArticle = new Article
+                    {
+                        // Champs récupérables directement depuis la table SQL
+                        RefArticle = Reader.GetString(0),
+                        Description = Reader.GetString(1),
+                        RefSousFamille = Reader.GetInt16(2),
+                        RefMarque = Reader.GetInt16(3),
+                        PrixHT = Reader.GetFloat(4),
+                        Quantite = Reader.GetInt16(5),
 
-                    // Champs récupérables directement depuis la table SQL
-                    NewArticle.RefArticle = Reader.GetString(0);
-                    NewArticle.Description = Reader.GetString(1);
-                    NewArticle.RefSousFamille = Reader.GetInt16(2);
-                    NewArticle.RefMarque = Reader.GetInt16(3);
-                    NewArticle.PrixHT = Reader.GetFloat(4);
-                    NewArticle.Quantite = Reader.GetInt16(5);
-
-                    // Champs récupérables depuis d'autres tables
-                    NewArticle.Marque = GetNomMarque(NewArticle.RefMarque);
-                    NewArticle.RefFamille = GetRefFamille(NewArticle.RefSousFamille);
-                    NewArticle.Famille = GetNomFamille(NewArticle.RefFamille);
-                    NewArticle.SousFamille = GetNomSousFamille(NewArticle.RefSousFamille);
+                        // Champs récupérables depuis d'autres tables
+                        Marque = GetNomMarque(Reader.GetInt16(3)),
+                        RefFamille = GetRefFamille(Reader.GetInt16(2)),
+                        Famille = GetNomFamille(GetRefFamille(Reader.GetInt16(2))),
+                        SousFamille = GetNomSousFamille(Reader.GetInt16(2))
+                    };
 
                     return NewArticle;
                 }
@@ -117,6 +136,7 @@ namespace Bacchus
                 }
                 else
                 {
+                    Console.WriteLine("La marque [{0}] n'existe pas, on l'ajoute", NomMarque);
                     return AddMarque(NomMarque);
                 }
             }
@@ -138,11 +158,9 @@ namespace Bacchus
                 {
                     return Reader.GetString(0);
                 }
-                else
-                {
-                    return null;
-                }
             }
+
+            return null;
         }
 
         /// <summary>
@@ -164,13 +182,14 @@ namespace Bacchus
                 }
                 else
                 {
+                    Console.WriteLine("La famille [{0}] n'existe pas, on l'ajoute", NomFamille);
                     return AddFamille(NomFamille);
                 }
             }
         }
 
         /// <summary>
-        /// Renvoie la RefFamille de la sous-famille passée en paramètre, ou null sinon
+        /// Renvoie la RefFamille de la sous-famille passée en paramètre, ou -1 sinon
         /// </summary>
         /// <param name="NomFamille"></param>
         /// <returns></returns>
@@ -187,7 +206,7 @@ namespace Bacchus
                 }
             }
 
-            return null;
+            return -1;
         }
 
         /// <summary>
@@ -219,7 +238,7 @@ namespace Bacchus
         /// <returns></returns>
         public int GetRefSousFamille(int RefFamille, string NomSousFamille)
         {
-            string Cmd = "SELECT RefSousFamille FROM Familles WHERE RefFamille = " + RefFamille + " AND Nom = '" + NomSousFamille + "'";
+            string Cmd = "SELECT RefSousFamille FROM SousFamilles WHERE RefFamille = " + RefFamille + " AND Nom = '" + NomSousFamille + "'";
             SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
 
             using (SQLiteDataReader Reader = Command.ExecuteReader())
@@ -229,6 +248,7 @@ namespace Bacchus
                     return Reader.GetInt16(0);
                 }
                 else {
+                    Console.WriteLine("La sous-famille [{0}] n'existe pas, on l'ajoute", NomSousFamille);
                     return AddSousFamille(RefFamille, NomSousFamille);
                 }
             }
@@ -306,12 +326,18 @@ namespace Bacchus
         /// <returns></returns>
         public int AddSousFamille(int RefFamille, string NomSousFamille)
         {
-            string Cmd = "INSERT INTO SousFamilles(RefFamille, Nom) VALUES(" + RefFamille + "'" + NomSousFamille + "')";
+            string Cmd = "INSERT INTO SousFamilles(RefFamille, Nom) VALUES(@RefFamille, @NomSousFamille)";
             SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
+
+            SQLiteParameter RefFamilleParam = new SQLiteParameter("@RefFamille", DbType.Int16) { Value = RefFamille };
+            SQLiteParameter NomSousFamilleParam = new SQLiteParameter("@NomSousFamille", DbType.String) { Value = NomSousFamille };
+
+            Command.Parameters.Add(RefFamilleParam);
+            Command.Parameters.Add(NomSousFamilleParam);
 
             int result = Command.ExecuteNonQuery();
 
-            Cmd = "SELECT RefSousFamille FROM Familles WHERE RefFamille = " + RefFamille + " AND Nom = '" + NomSousFamille + "'";
+            Cmd = "SELECT RefSousFamille FROM SousFamilles WHERE RefFamille = " + RefFamille + " AND Nom = '" + NomSousFamille + "'";
             Command = new SQLiteCommand(Cmd, Connection);
 
             using (SQLiteDataReader Reader = Command.ExecuteReader())

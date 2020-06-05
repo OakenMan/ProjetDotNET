@@ -65,6 +65,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DAO.cs" />
     <Compile Include="ImportForm.cs">
       <SubType>Form</SubType>
     </Compile>

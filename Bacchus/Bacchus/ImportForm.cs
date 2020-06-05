@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-struct Article
+struct Article  // à remplacer par une classe si possible ça sera plus simple à gérer ensuite
 {
     public string RefArticle;
     public string Description;
@@ -20,8 +20,8 @@ struct Article
     public int RefSousFamille;
     public string Marque;
     public int RefMarque;
-    public string PrixHT;
-    public string Quantite;
+    public string PrixHT;   // à remplacer par un float
+    public string Quantite; // à remplacer par un int
 
     public override String ToString()
     {
@@ -49,31 +49,33 @@ namespace Bacchus
         {
             var FilePath = string.Empty;
 
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            using (OpenFileDialog FileDialog = new OpenFileDialog())
             {
-                openFileDialog.InitialDirectory = "c:\\";
-                openFileDialog.Filter = "csv files (*.csv)|*.csv|All files (*.*)|*.*";
-                openFileDialog.FilterIndex = 2;
-                openFileDialog.RestoreDirectory = true;
+                // Paramètres du FileDialog
+                FileDialog.InitialDirectory = "c:\\";
+                FileDialog.Filter = "csv files (*.csv)|*.csv|All files (*.*)|*.*";
+                FileDialog.FilterIndex = 0;
+                FileDialog.RestoreDirectory = true;
 
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                // Si l'utilisateur choisit un fichier
+                if (FileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    //Get the path of specified file
-                    FilePath = openFileDialog.FileName;
+                    // On récupère le nom de fichier
+                    FilePath = FileDialog.FileName;
 
+                    // On l'affiche dans la TextBox
                     FileTextBox.Text = FilePath;
 
+                    // On parse le fichier 
+                    // TODO: gestion d'erreur de format ?
+                    // TODO : mettre ListeArticles en attribut de ImportForm ?
                     List<Article> ListeArticle = Parser(FilePath);
-                    //foreach (Article article in ListeArticle)
-                    //{
-                    //    Console.WriteLine(article);
-                    //}
                 }
             }
         }
         
         /// <summary>
-        /// 
+        /// Parse le fichier pour récupèrer la liste d'articles
         /// </summary>
         /// <param name="FilePath"></param>
         /// <returns></returns>
@@ -113,26 +115,9 @@ namespace Bacchus
         /// <param name="e"></param>
         private void OverwriteDataButton_Click(object sender, EventArgs e)
         {
-            string DatabasePath = "Data Source = Bacchus.SQLite;";
-            string SQLCommand = "INSERT INTO Articles (RefArticle, Description, RefSousFamille, RefMarque, PrixHT, Quantite) " +
-                "VALUES('F6456', 'description', 456, 789, 2.99, 10);";
-
-            using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
-            {
-                SQLiteCommand Command = new SQLiteCommand(SQLCommand, Connection);
-                Connection.Open();
-
-                int result = Command.ExecuteNonQuery();
-            }
-            //using (StreamReader reader = new StreamReader(fileStream))
-            //{
-            //    fileContent = reader.ReadToEnd();
-            //    textBox1.Text = fileContent;
-            //    Text = "Editeur de texte [" + openFileDialog.SafeFileName + "]";
-            //    FileModified = false;
-            //}
-
-
+            DAO dao = new DAO();
+            int id = dao.GetRefMarque("Linux");
+            Console.WriteLine("Id of Linux = "+ id);
 
             //Algorithme :
             /*

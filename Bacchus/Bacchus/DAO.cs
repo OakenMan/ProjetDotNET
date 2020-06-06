@@ -166,6 +166,77 @@ namespace Bacchus
         }
 
         /// <summary>
+        /// Renvoie une liste contenant le nom de toutes les familles
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetAllFamilles()
+        {
+            List<string> ListeFamilles = new List<string>();
+
+            string Cmd = "SELECT Nom FROM Familles";
+            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
+
+            // On récupère la liste des noms de familles
+            using (SQLiteDataReader Reader = Command.ExecuteReader())
+            {
+                while (Reader.Read())
+                {
+                    ListeFamilles.Add(Reader.GetString(0));
+                }
+            }
+
+            return ListeFamilles;
+        }
+
+        /// <summary>
+        /// Renvoie une liste contenant le nom de toutes les sous-familles d'une famille de ref "RefFamille"
+        /// </summary>
+        /// /// <param name="RefFamille"></param>
+        /// <returns></returns>
+        public List<string> GetAllSousFamilles(int RefFamille)
+        {
+            List<string> ListeSousFamilles = new List<string>();
+
+            string Cmd = "SELECT Nom FROM SousFamilles WHERE RefFamille = " + RefFamille;
+            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
+
+            // On récupère la liste des noms de sous-familles appartenant à la famille RefFamille
+            using (SQLiteDataReader Reader = Command.ExecuteReader())
+            {
+                while (Reader.Read())
+                {
+                    ListeSousFamilles.Add(Reader.GetString(0));
+                }
+            }
+
+            return ListeSousFamilles;
+        }
+
+        /// <summary>
+        /// Renvoie une liste contenant le nom de toutes les marques
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetAllMarques()
+        {
+            List<string> ListeMarques = new List<string>();
+
+            string Cmd = "SELECT Nom FROM Marques";
+            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
+
+            // On récupère la liste des noms de marques
+            using (SQLiteDataReader Reader = Command.ExecuteReader())
+            {
+                while (Reader.Read())
+                {
+                    ListeMarques.Add(Reader.GetString(0));
+                }
+            }
+
+            return ListeMarques;
+        }
+
+
+        /// <summary>
         /// Essaye de récupérer la Ref de la marque passée en paramètre.
         /// Si cette marque n'existe pas dans la BDD, elle est ajoutée et la nouvelle Ref est renvoyée.
         /// </summary>

@@ -1,6 +1,6 @@
 ﻿namespace Bacchus
 {
-    partial class Form1
+    partial class FormMain
     {
         /// <summary>
         /// Variable nécessaire au concepteur.
@@ -28,6 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Tous les articles");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Familles");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Marques");
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fichierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.actualiserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -35,8 +38,8 @@
             this.exporterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.treeView1 = new System.Windows.Forms.TreeView();
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.TreeView = new System.Windows.Forms.TreeView();
+            this.ListView = new System.Windows.Forms.ListView();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -70,6 +73,7 @@
             this.actualiserToolStripMenuItem.Name = "actualiserToolStripMenuItem";
             this.actualiserToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.actualiserToolStripMenuItem.Text = "Actualiser";
+            this.actualiserToolStripMenuItem.Click += new System.EventHandler(this.actualiserToolStripMenuItem_Click);
             // 
             // importerToolStripMenuItem
             // 
@@ -103,35 +107,45 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.AutoScroll = true;
-            this.splitContainer1.Panel1.Controls.Add(this.treeView1);
+            this.splitContainer1.Panel1.Controls.Add(this.TreeView);
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.listView1);
+            this.splitContainer1.Panel2.Controls.Add(this.ListView);
             this.splitContainer1.Size = new System.Drawing.Size(800, 400);
             this.splitContainer1.SplitterDistance = 266;
             this.splitContainer1.TabIndex = 2;
             // 
-            // treeView1
+            // TreeView
             // 
-            this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView1.Location = new System.Drawing.Point(0, 0);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(266, 400);
-            this.treeView1.TabIndex = 0;
+            this.TreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TreeView.Location = new System.Drawing.Point(0, 0);
+            this.TreeView.Name = "TreeView";
+            treeNode1.Name = "NoeudTousArticles";
+            treeNode1.Text = "Tous les articles";
+            treeNode2.Name = "NoeudFamilles";
+            treeNode2.Text = "Familles";
+            treeNode3.Name = "NoeudMarque";
+            treeNode3.Text = "Marques";
+            this.TreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode1,
+            treeNode2,
+            treeNode3});
+            this.TreeView.Size = new System.Drawing.Size(266, 400);
+            this.TreeView.TabIndex = 0;
             // 
-            // listView1
+            // ListView
             // 
-            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(0, 0);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(530, 400);
-            this.listView1.TabIndex = 0;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Details;
+            this.ListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ListView.HideSelection = false;
+            this.ListView.Location = new System.Drawing.Point(0, 0);
+            this.ListView.Name = "ListView";
+            this.ListView.Size = new System.Drawing.Size(530, 400);
+            this.ListView.TabIndex = 0;
+            this.ListView.UseCompatibleStateImageBehavior = false;
+            this.ListView.View = System.Windows.Forms.View.Details;
             // 
-            // Form1
+            // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -141,8 +155,8 @@
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.MinimumSize = new System.Drawing.Size(640, 360);
-            this.Name = "Form1";
-            this.Text = "FormMain";
+            this.Name = "FormMain";
+            this.Text = "Gestionnaire de base de donnée";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -164,8 +178,8 @@
         private System.Windows.Forms.ToolStripMenuItem exporterToolStripMenuItem;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.ListView listView1;
-        private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.ListView ListView;
+        private System.Windows.Forms.TreeView TreeView;
 
     }
 }

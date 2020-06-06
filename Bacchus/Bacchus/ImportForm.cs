@@ -14,7 +14,7 @@ namespace Bacchus
 {
     public partial class ImportForm : Form
     {
-        
+
         public ImportForm()
         {
             InitializeComponent();
@@ -53,7 +53,7 @@ namespace Bacchus
                 }
             }
         }
-        
+
         /// <summary>
         /// Parse le fichier pour récupèrer la liste d'articles
         /// </summary>
@@ -83,7 +83,7 @@ namespace Bacchus
                         Famille = values[3],
                         SousFamille = values[4],
                         PrixHT = float.Parse(values[5]),
-                        Quantite = 0
+                        Quantite = 1
                     };
 
                     ListeArticle.Add(article);
@@ -94,36 +94,33 @@ namespace Bacchus
         }
 
         /// <summary>
-        /// Fonction appelée en cliquant sur le bouton "Écraser les données"
-        /// Ajoute les données en écrasant la base de donnée actuelle
+        /// Fonction appelée en cliquant sur le bouton "Écraser les données".
+        /// Ajoute les données en écrasant la base de donnée actuelle.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OverwriteDataButton_Click(object sender, EventArgs e)
         {
+            DAO dao = new DAO();
+            dao.CleanDatabase();
+
             // On désactive les boutons pour éviter que l'utilisateur reclique dessus
             OverwriteDataButton.Enabled = false;
             AppendDataButton.Enabled = false;
-
-            // On vide la BDD
-            // ???
 
             // On parse le fichier choisi par l'utilisateur pour récupérer la liste d'articles
             List<Article> ListeArticle = Parser(FileTextBox.Text);
             ProgressBar.Maximum = ListeArticle.Count;
 
-            DAO dao = new DAO();
-
-            // On ajoute chaque article à la BDD
             foreach (Article NewArticle in ListeArticle)
             {
-                dao.AddArticle(NewArticle.RefArticle, NewArticle.Description, NewArticle.Marque, NewArticle.Famille, NewArticle.SousFamille, NewArticle.PrixHT, NewArticle.Quantite);
+                dao.AddOrUpdateArticle(NewArticle);
                 ProgressBar.PerformStep();
             }
 
             // On affiche un message informatif
             string Message = ListeArticle.Count.ToString() + " article(s) importés avec succès à la base de donnée !";
-            if(MessageBox.Show(Message, "Importation réussie") == DialogResult.OK)
+            if (MessageBox.Show(Message, "Importation réussie") == DialogResult.OK)
             {
                 Close();
             }
@@ -150,9 +147,9 @@ namespace Bacchus
             // On ajoute chaque article à la BDD (le DAO s'occupe d'ajouter OU de mettre à jour les articles)
             foreach (Article NewArticle in ListeArticle)
             {
+                dao.AddOrUpdateArticle(NewArticle);
                 // ### TODO : si on a le temps, faire que AddArticle renvoie un int en fonction de si l'article a été ajouté ou modifié
                 // ### de cette manière, on peut afficher dans le MessageBox la proportion d'articles ajoutés/modifiés.
-                dao.AddArticle(NewArticle.RefArticle, NewArticle.Description, NewArticle.Marque, NewArticle.Famille, NewArticle.SousFamille, NewArticle.PrixHT, NewArticle.Quantite);
                 ProgressBar.PerformStep();
             }
 

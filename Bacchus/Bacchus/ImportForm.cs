@@ -102,7 +102,7 @@ namespace Bacchus
 
             foreach (Article NewArticle in ListeArticle)
             {
-                dao.AddArticle(NewArticle);
+                dao.AddOrUpdateArticle(NewArticle);
             }
         }
 
@@ -120,7 +120,7 @@ namespace Bacchus
             DAO dao = new DAO();
             foreach (Article NewArticle in ListeArticle)
             {
-                dao.AddArticle(NewArticle);
+                dao.AddOrUpdateArticle(NewArticle);
             }
         }
     }

@@ -29,10 +29,17 @@ namespace Bacchus
             }
         }
         
-        ~DAO()
-        {
-            Connection.Close();
-        }
+        //~DAO()
+        //{
+        //    try
+        //    {
+        //        Connection.Close();
+        //    }
+        //    catch (SQLiteException Error)
+        //    {
+        //        Console.WriteLine(Error.Message);
+        //    }
+        //}
 
         /// <summary>
         /// Nettoie le contenu de chaque table de la BDD et réinitialise les indexs d'ID à 0.
@@ -56,7 +63,7 @@ namespace Bacchus
             //On réinitialise les indexs
             Cmd = "VACUUM";
             Command = new SQLiteCommand(Cmd, Connection);
-            Command.ExecuteReader();
+            Command.ExecuteNonQuery();
         }
 
         /// <summary>
@@ -64,7 +71,7 @@ namespace Bacchus
         /// Si il est déjà présent (= RefArticle identique), les autres champs sont mis à jour.
         /// </summary>
         /// <param name="NewArticle"></param>
-        public void AddArticle(Article article)
+        public void AddOrUpdateArticle(Article article)
         {
             string Cmd = "SELECT * FROM Articles WHERE RefArticle = '" + article.RefArticle + "'";
             SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
@@ -75,39 +82,81 @@ namespace Bacchus
                 if (Reader.Read())
                 {
                     Console.WriteLine("L'article {0} existe déjà, on le met à jour", article.RefArticle);
-                    //TODO : METTRE A JOUR
+                    UpdateArticle(article);
                 }
                 // Si l'article n'existe pas dans la BDD, on l'ajoute
                 else
                 {
                     Console.WriteLine("Ajout de l'article {0}", article.RefArticle);
-
-                    int RefMarque = GetRefMarque(article.Marque);
-                    int RefFamille = GetRefFamille(article.Famille);
-                    int RefSousFamille = GetRefSousFamille(RefFamille, article.SousFamille);
-
-                    Cmd = "INSERT INTO Articles (RefArticle, Description, RefSousFamille, RefMarque, PrixHT, Quantite) " +
-                        "VALUES(@RefArticle, @Description, @RefSousFamille, @RefMarque, @PrixHT, @Quantite);";
-
-                    Command = new SQLiteCommand(Cmd, Connection);
-
-                    SQLiteParameter RefArticleParam = new SQLiteParameter("@RefArticle", DbType.String) { Value = article.RefArticle };
-                    SQLiteParameter DescriptionParam = new SQLiteParameter("@Description", DbType.String) { Value = article.Description };
-                    SQLiteParameter RefSousFamilleParam = new SQLiteParameter("@RefSousFamille", DbType.Int16) { Value = RefSousFamille };
-                    SQLiteParameter RefMarqueParam = new SQLiteParameter("@RefMarque", DbType.Int16) { Value = RefMarque };
-                    SQLiteParameter PrixHTParam = new SQLiteParameter("@PrixHT", DbType.Decimal) { Value = article.PrixHT };
-                    SQLiteParameter QuantiteParam = new SQLiteParameter("@Quantite", DbType.Int16) { Value = article.Quantite };
-
-                    Command.Parameters.Add(RefArticleParam);
-                    Command.Parameters.Add(DescriptionParam);
-                    Command.Parameters.Add(RefSousFamilleParam);
-                    Command.Parameters.Add(RefMarqueParam);
-                    Command.Parameters.Add(PrixHTParam);
-                    Command.Parameters.Add(QuantiteParam);
-
-                    int result = Command.ExecuteNonQuery();
+                    AddArticle(article);
                 }
             }
+        }
+
+        /// <summary>
+        /// Ajoute un article à la base de données.
+        /// </summary>
+        /// <param name="article"></param>
+        /// <returns></returns>
+        public int AddArticle(Article article)
+        {
+            int RefMarque = GetRefMarque(article.Marque);
+            int RefFamille = GetRefFamille(article.Famille);
+            int RefSousFamille = GetRefSousFamille(RefFamille, article.SousFamille);
+
+            string Cmd = "INSERT INTO Articles (RefArticle, Description, RefSousFamille, RefMarque, PrixHT, Quantite) " +
+                "VALUES(@RefArticle, @Description, @RefSousFamille, @RefMarque, @PrixHT, @Quantite);";
+
+            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
+
+            SQLiteParameter RefArticleParam = new SQLiteParameter("@RefArticle", DbType.String) { Value = article.RefArticle };
+            SQLiteParameter DescriptionParam = new SQLiteParameter("@Description", DbType.String) { Value = article.Description };
+            SQLiteParameter RefSousFamilleParam = new SQLiteParameter("@RefSousFamille", DbType.Int16) { Value = RefSousFamille };
+            SQLiteParameter RefMarqueParam = new SQLiteParameter("@RefMarque", DbType.Int16) { Value = RefMarque };
+            SQLiteParameter PrixHTParam = new SQLiteParameter("@PrixHT", DbType.Decimal) { Value = article.PrixHT };
+            SQLiteParameter QuantiteParam = new SQLiteParameter("@Quantite", DbType.Int16) { Value = article.Quantite };
+
+            Command.Parameters.Add(RefArticleParam);
+            Command.Parameters.Add(DescriptionParam);
+            Command.Parameters.Add(RefSousFamilleParam);
+            Command.Parameters.Add(RefMarqueParam);
+            Command.Parameters.Add(PrixHTParam);
+            Command.Parameters.Add(QuantiteParam);
+
+            return Command.ExecuteNonQuery();
+        }
+
+        /// <summary>
+        /// Met à jour un article déjà existant dans la base de données.
+        /// </summary>
+        /// <param name="ArticleUpdated"></param>
+        public int UpdateArticle(Article ArticleUpdated)
+        {
+            int RefMarqueUpdated = GetRefMarque(ArticleUpdated.Marque);
+            int RefFamilleUpdated = GetRefFamille(ArticleUpdated.Famille);
+            int RefSousFamilleUpdated = GetRefSousFamille(RefFamilleUpdated, ArticleUpdated.SousFamille);
+
+            string Cmd = "UPDATE Articles " +
+                        "SET Description = '@Description', RefSousFamille = @RefSousFamille, RefMarque = @RefMarque, PrixHT = @PrixHT, Quantite = @Quantite " +
+                        "WHERE RefArticle = '@RefArticle';";
+
+            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
+
+            SQLiteParameter RefArticleParam = new SQLiteParameter("@RefArticle", DbType.String) { Value = ArticleUpdated.RefArticle };
+            SQLiteParameter DescriptionParam = new SQLiteParameter("@Description", DbType.String) { Value = ArticleUpdated.Description };
+            SQLiteParameter RefSousFamilleParam = new SQLiteParameter("@RefSousFamille", DbType.Int16) { Value = RefSousFamilleUpdated };
+            SQLiteParameter RefMarqueParam = new SQLiteParameter("@RefMarque", DbType.Int16) { Value = RefMarqueUpdated };
+            SQLiteParameter PrixHTParam = new SQLiteParameter("@PrixHT", DbType.Decimal) { Value = ArticleUpdated.PrixHT };
+            SQLiteParameter QuantiteParam = new SQLiteParameter("@Quantite", DbType.Int16) { Value = ArticleUpdated.Quantite };
+
+            Command.Parameters.Add(RefArticleParam);
+            Command.Parameters.Add(DescriptionParam);
+            Command.Parameters.Add(RefSousFamilleParam);
+            Command.Parameters.Add(RefMarqueParam);
+            Command.Parameters.Add(PrixHTParam);
+            Command.Parameters.Add(QuantiteParam);
+
+            return Command.ExecuteNonQuery();
         }
 
         /// <summary>

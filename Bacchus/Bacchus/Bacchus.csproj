@@ -65,35 +65,39 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Article.cs" />
-    <Compile Include="DAO.cs" />
-    <Compile Include="ExportForm.cs">
+    <Compile Include="src\Article.cs" />
+    <Compile Include="src\DAOs\DAO.cs" />
+    <Compile Include="src\DAOs\DAOArticle.cs" />
+    <Compile Include="src\DAOs\DAOFamille.cs" />
+    <Compile Include="src\DAOs\DAOMarque.cs" />
+    <Compile Include="src\DAOs\DAOSousFamille.cs" />
+    <Compile Include="src\ExportForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ExportForm.Designer.cs">
+    <Compile Include="src\ExportForm.Designer.cs">
       <DependentUpon>ExportForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ImportForm.cs">
+    <Compile Include="src\ImportForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ImportForm.Designer.cs">
+    <Compile Include="src\ImportForm.Designer.cs">
       <DependentUpon>ImportForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormMain.cs">
+    <Compile Include="src\FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormMain.Designer.cs">
+    <Compile Include="src\FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="Program.cs" />
+    <Compile Include="src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="ExportForm.resx">
+    <EmbeddedResource Include="src\ExportForm.resx">
       <DependentUpon>ExportForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormMain.resx">
+    <EmbeddedResource Include="src\FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ImportForm.resx">
+    <EmbeddedResource Include="src\ImportForm.resx">
       <DependentUpon>ImportForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

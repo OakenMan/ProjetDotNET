@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using Bacchus.src.DAOs;
 
 namespace Bacchus
 {
@@ -79,17 +74,19 @@ namespace Bacchus
             TreeView.Nodes[1].Nodes.Clear();
             TreeView.Nodes[2].Nodes.Clear();
 
-            DAO dao = new DAO();
+            DAOFamille daoFamille = new DAOFamille();
+            DAOSousFamille daoSousFamille = new DAOSousFamille();
+            DAOMarque daoMarque = new DAOMarque();
 
             // Ajout des noeuds "Familles"
-            List<string> ListeFamilles = dao.GetAllFamilles();
+            List<string> ListeFamilles = daoFamille.GetAllFamilles();
             foreach(string Famille in ListeFamilles)
             {
                 TreeNode NodeFamille = new TreeNode(Famille);
                 TreeView.Nodes[1].Nodes.Add(NodeFamille);
 
                 // Ajout des noeuds "Sous-Famille"
-                List<string> ListeSousFamilles = dao.GetAllSousFamilles(dao.GetRefFamille(Famille));
+                List<string> ListeSousFamilles = daoSousFamille.GetAllSousFamilles(daoFamille.GetRefFamille(Famille));
                 foreach(string SousFamille in ListeSousFamilles)
                 {
                     NodeFamille.Nodes.Add(SousFamille);
@@ -97,7 +94,7 @@ namespace Bacchus
             }
 
             // Ajout des noeuds "Marques"
-            List<string> ListeMarques = dao.GetAllMarques();
+            List<string> ListeMarques = daoMarque.GetAllMarques();
             foreach(string Marque in ListeMarques)
             {
                 TreeView.Nodes[2].Nodes.Add(Marque);

@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using Bacchus.src.DAOs;
 
 namespace Bacchus
 {
@@ -42,10 +39,10 @@ namespace Bacchus
 
             List<Article> ListeArticles = new List<Article>();
 
-            DAO dao = new DAO();
+            DAOArticle daoArticle = new DAOArticle();
 
             // Récupère la liste de tous les RefArticle
-            List<string> ListeRefArticles = dao.GetAllRefArticles();
+            List<string> ListeRefArticles = daoArticle.GetAllRefArticles();
             Console.WriteLine("nombre de ref articles = " + ListeRefArticles.Count);
             ProgressBar.Maximum = ListeRefArticles.Count();
 
@@ -53,7 +50,7 @@ namespace Bacchus
             foreach(string RefArticle in ListeRefArticles)
             {
                 Console.WriteLine("récupération de l'article " + RefArticle);
-                ListeArticles.Add(dao.GetArticle(RefArticle));
+                ListeArticles.Add(daoArticle.GetArticle(RefArticle));
                 ProgressBar.PerformStep();
             }
 

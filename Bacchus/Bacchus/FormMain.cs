@@ -15,6 +15,7 @@ namespace Bacchus
         public Form1()
         {
             InitializeComponent();
+            CenterToScreen();
 
             // Change la taille minimum de la section gauche (la TreeView)
             splitContainer1.Panel1MinSize = 200;
@@ -33,6 +34,12 @@ namespace Bacchus
         private void importerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ImportForm Form = new ImportForm();
+            Form.Show();
+        }
+
+        private void exporterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExportForm Form = new ExportForm();
             Form.Show();
         }
     }

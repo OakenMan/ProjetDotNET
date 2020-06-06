@@ -18,6 +18,7 @@ namespace Bacchus
         public ImportForm()
         {
             InitializeComponent();
+            CenterToScreen();
         }
 
         /// <summary>
@@ -62,14 +63,15 @@ namespace Bacchus
         {
             List<Article> ListeArticle = new List<Article>();
 
-            using (var reader = new StreamReader(FilePath))
+            FileStream Stream = new FileStream(FilePath, FileMode.Open);
+            using (StreamReader Reader = new StreamReader(Stream, Encoding.UTF8))
             {
                 // On lit la première ligne pour passer le nom des colonnes
-                var line = reader.ReadLine();
-                while (!reader.EndOfStream)
+                var line = Reader.ReadLine();
+                while (!Reader.EndOfStream)
                 {
                     // Pour chaque ligne, on sépare les éléments avec le caractère ";"
-                    line = reader.ReadLine();
+                    line = Reader.ReadLine();
                     var values = line.Split(';');
 
                     // Et on créé un nouvel article
@@ -120,8 +122,8 @@ namespace Bacchus
             }
 
             // On affiche un message informatif
-            string Message = ListeArticle.Count.ToString() + " ajoutés avec succès à la base de donnée !";
-            if(MessageBox.Show(Message, "Succès") == DialogResult.OK)
+            string Message = ListeArticle.Count.ToString() + " article(s) importés avec succès à la base de donnée !";
+            if(MessageBox.Show(Message, "Importation réussie") == DialogResult.OK)
             {
                 this.Close();
             }
@@ -155,8 +157,8 @@ namespace Bacchus
             }
 
             // On affiche un message informatif
-            string Message = ListeArticle.Count.ToString() + " ajoutés avec succès à la base de donnée !";
-            if (MessageBox.Show(Message, "Succès") == DialogResult.OK)
+            string Message = ListeArticle.Count.ToString() + " article(s) importés avec succès à la base de donnée !";
+            if (MessageBox.Show(Message, "Importation réussie") == DialogResult.OK)
             {
                 this.Close();
             }

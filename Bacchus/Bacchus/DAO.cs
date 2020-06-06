@@ -118,6 +118,54 @@ namespace Bacchus
         }
 
         /// <summary>
+        /// Renvoie une liste avec tous les articles de la BDD
+        /// </summary>
+        /// <returns></returns>
+        public List<Article> GetAllArticles()
+        {
+            List<Article> ListeArticles = new List<Article>();
+
+            string Cmd = "SELECT RefArticle FROM Articles";
+            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
+
+            // On récupère la liste des RefArticle
+            using (SQLiteDataReader Reader = Command.ExecuteReader())
+            {
+                while (Reader.Read())
+                {
+                    // Pour chaque RefArticle, on récupère l'article correspondant et on l'ajoute à la liste
+                    Article NewArticle = GetArticle(Reader.GetString(0));
+                    ListeArticles.Add(NewArticle);
+                }
+            }
+
+            return ListeArticles;
+        }
+
+        /// <summary>
+        /// Renvoie une liste contenant tous les RefArticles de la BDD
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetAllRefArticles()
+        {
+            List<string> ListeRefArticles = new List<string>();
+
+            string Cmd = "SELECT RefArticle FROM Articles";
+            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
+
+            // On récupère la liste des RefArticle
+            using (SQLiteDataReader Reader = Command.ExecuteReader())
+            {
+                while (Reader.Read())
+                {
+                    ListeRefArticles.Add(Reader.GetString(0));
+                }
+            }
+
+            return ListeRefArticles;
+        }
+
+        /// <summary>
         /// Essaye de récupérer la Ref de la marque passée en paramètre.
         /// Si cette marque n'existe pas dans la BDD, elle est ajoutée et la nouvelle Ref est renvoyée.
         /// </summary>

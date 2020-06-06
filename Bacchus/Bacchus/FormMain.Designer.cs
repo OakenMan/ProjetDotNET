@@ -83,6 +83,7 @@
             this.exporterToolStripMenuItem.Name = "exporterToolStripMenuItem";
             this.exporterToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.exporterToolStripMenuItem.Text = "Exporter";
+            this.exporterToolStripMenuItem.Click += new System.EventHandler(this.exporterToolStripMenuItem_Click);
             // 
             // statusStrip1
             // 

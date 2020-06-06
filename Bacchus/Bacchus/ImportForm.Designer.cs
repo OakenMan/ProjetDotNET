@@ -47,6 +47,9 @@
             this.ProgressBar.Name = "ProgressBar";
             this.ProgressBar.Size = new System.Drawing.Size(551, 23);
             this.ProgressBar.TabIndex = 0;
+            this.ProgressBar.Minimum = 0;
+            this.ProgressBar.Value = 0;
+            this.ProgressBar.Step = 1;
             // 
             // flowLayoutPanel1
             // 
@@ -103,6 +106,7 @@
             this.OverwriteDataButton.TabIndex = 3;
             this.OverwriteDataButton.Text = "Écraser les données";
             this.OverwriteDataButton.Click += new System.EventHandler(this.OverwriteDataButton_Click);
+            this.OverwriteDataButton.Enabled = false;
             // 
             // AppendDataButton
             // 
@@ -113,6 +117,7 @@
             this.AppendDataButton.Text = "Ajouter les données";
             this.AppendDataButton.UseVisualStyleBackColor = true;
             this.AppendDataButton.Click += new System.EventHandler(this.AppendDataButton_Click);
+            this.AppendDataButton.Enabled = false;
             // 
             // ImportForm
             // 

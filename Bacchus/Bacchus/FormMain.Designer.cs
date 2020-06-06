@@ -1,4 +1,6 @@
-﻿namespace Bacchus
+﻿using System;
+
+namespace Bacchus
 {
     partial class FormMain
     {
@@ -71,21 +73,21 @@
             // actualiserToolStripMenuItem
             // 
             this.actualiserToolStripMenuItem.Name = "actualiserToolStripMenuItem";
-            this.actualiserToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.actualiserToolStripMenuItem.Size = new System.Drawing.Size(149, 26);
             this.actualiserToolStripMenuItem.Text = "Actualiser";
             this.actualiserToolStripMenuItem.Click += new System.EventHandler(this.actualiserToolStripMenuItem_Click);
             // 
             // importerToolStripMenuItem
             // 
             this.importerToolStripMenuItem.Name = "importerToolStripMenuItem";
-            this.importerToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.importerToolStripMenuItem.Size = new System.Drawing.Size(149, 26);
             this.importerToolStripMenuItem.Text = "Importer";
             this.importerToolStripMenuItem.Click += new System.EventHandler(this.importerToolStripMenuItem_Click);
             // 
             // exporterToolStripMenuItem
             // 
             this.exporterToolStripMenuItem.Name = "exporterToolStripMenuItem";
-            this.exporterToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.exporterToolStripMenuItem.Size = new System.Drawing.Size(149, 26);
             this.exporterToolStripMenuItem.Text = "Exporter";
             this.exporterToolStripMenuItem.Click += new System.EventHandler(this.exporterToolStripMenuItem_Click);
             // 
@@ -133,6 +135,7 @@
             treeNode3});
             this.TreeView.Size = new System.Drawing.Size(266, 400);
             this.TreeView.TabIndex = 0;
+            this.TreeView.NodeMouseClick += this.TreeView_NodeMouseClick;
             // 
             // ListView
             // 
@@ -157,7 +160,6 @@
             this.MinimumSize = new System.Drawing.Size(640, 360);
             this.Name = "FormMain";
             this.Text = "Gestionnaire de base de donnée";
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -168,6 +170,11 @@
             this.PerformLayout();
 
         }
+
+        //private void myEventHandler(object sender, EventArgs e)
+        //{
+        //    Console.WriteLine("clik");
+        //}
 
         #endregion
 

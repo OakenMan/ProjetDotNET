@@ -78,7 +78,7 @@ namespace Bacchus
                     string Message = ListeArticles.Count.ToString() + " article(s) exportés avec succès dans le fichier " + FileDialog.FileName + "!";
                     if (MessageBox.Show(Message, "Exportation réussie") == DialogResult.OK)
                     {
-                        this.Close();
+                        Close();
                     }
                 }
             }

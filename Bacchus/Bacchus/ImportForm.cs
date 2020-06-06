@@ -125,7 +125,7 @@ namespace Bacchus
             string Message = ListeArticle.Count.ToString() + " article(s) importés avec succès à la base de donnée !";
             if(MessageBox.Show(Message, "Importation réussie") == DialogResult.OK)
             {
-                this.Close();
+                Close();
             }
         }
 
@@ -160,7 +160,7 @@ namespace Bacchus
             string Message = ListeArticle.Count.ToString() + " article(s) importés avec succès à la base de donnée !";
             if (MessageBox.Show(Message, "Importation réussie") == DialogResult.OK)
             {
-                this.Close();
+                Close();
             }
         }
     }

@@ -105,5 +105,38 @@ namespace Bacchus
 
             TreeView.EndUpdate();
         }
+
+        /// <summary>
+        /// Fonction appelée à chaque clic de souris sur un élément de la TreeView
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if(e.Node.Text == "Tous les articles")
+            {
+                Console.WriteLine("Afficher tous les articles");
+            }
+            else if(e.Node.Text == "Familles")
+            {
+                Console.WriteLine("Afficher la liste des familles");
+            }
+            else if(e.Node.Text == "Marques")
+            {
+                Console.WriteLine("Afficher la liste des marques");
+            }
+            else if(e.Node.Parent.Text == "Familles")
+            {
+                Console.WriteLine("Afficher la liste des sous-familles de la famille [" + e.Node.Text + "]");
+            }
+            else if(e.Node.Parent.Text == "Marques")
+            {
+                Console.WriteLine("Afficher les articles de la marque [" + e.Node.Text + "]");
+            }
+            else
+            {
+                Console.WriteLine("Afficher les articles de la sous-famille [" + e.Node.Text + "]");
+            }
+        }
     }
 }

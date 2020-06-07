@@ -143,21 +143,24 @@ namespace Bacchus
                 ListView.Columns.Add("Description", -2, HorizontalAlignment.Left);
             }
 
-            DAO dao = new DAO();
-
-            // Si on veut afficher tous les articles
+            // Si on veut afficher des articles
             if(ListViewDisplay == "ARTICLES")
             {
+                DAOArticle daoArticle = new DAOArticle();
+
                 List<Article> ListeArticles = new List<Article>();
-                
+
+                // Tous les articles
                 if(ListViewCondition == "")
                 {
-                    ListeArticles = dao.GetAllArticles();
+                    ListeArticles = daoArticle.GetAllArticles();
                 }
+                // Les articles d'une certaine marque
                 else if(ListViewCondition == "MARQUE")
                 {
                     //ListeArticles = dao.GetArticlesWhereMarque(ListViewValue);
                 }
+                // Les articles d'une certaine sous-famille
                 else if(ListViewCondition == "SOUSFAMILLE")
                 {
                     //ListeArticles = dao.GetArticlesWhereSousFamille(ListViewValue2, ListViewValue);
@@ -177,7 +180,9 @@ namespace Bacchus
             }
             else if(ListViewDisplay == "MARQUES")
             {
-                List<string> ListeMarques = dao.GetAllMarques();
+                DAOMarque daoMarque = new DAOMarque();
+
+                List<string> ListeMarques = daoMarque.GetAllMarques();
                 foreach(string Marque in ListeMarques)
                 {
                     ListView.Items.Add(new ListViewItem(Marque));
@@ -185,7 +190,9 @@ namespace Bacchus
             }
             else if(ListViewDisplay == "FAMILLES")
             {
-                List<string> ListeFamilles = dao.GetAllFamilles();
+                DAOFamille daoFamille = new DAOFamille();
+
+                List<string> ListeFamilles = daoFamille.GetAllFamilles();
                 foreach(string Famille in ListeFamilles)
                 {
                     ListView.Items.Add(new ListViewItem(Famille));
@@ -193,7 +200,10 @@ namespace Bacchus
             }
             else if(ListViewDisplay == "SOUSFAMILLES")
             {
-                List<string> ListeSousFamilles = dao.GetAllSousFamilles(dao.GetRefFamille(ListViewValue));
+                DAOSousFamille daoSousFamille = new DAOSousFamille();
+                DAOFamille daoFamille = new DAOFamille();
+
+                List<string> ListeSousFamilles = daoSousFamille.GetAllSousFamilles(daoFamille.GetRefFamille(ListViewValue));
                 foreach(string SousFamille in ListeSousFamilles)
                 {
                     ListView.Items.Add(new ListViewItem(SousFamille));

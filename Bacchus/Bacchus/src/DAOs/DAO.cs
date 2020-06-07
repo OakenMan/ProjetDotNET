@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.SQLite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Bacchus.src.DAOs
 {
@@ -44,7 +39,7 @@ namespace Bacchus.src.DAOs
                     //On supprime le contenu
                     Cmd = "DELETE FROM '" + Reader["name"] + "'";
                     Command = new SQLiteCommand(Cmd, Connection);
-                    Command.ExecuteReader();
+                    Command.ExecuteNonQuery();
                 }
             }
 

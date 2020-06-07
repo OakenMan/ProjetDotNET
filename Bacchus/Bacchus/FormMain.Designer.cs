@@ -30,9 +30,9 @@ namespace Bacchus
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Tous les articles");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Familles");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Marques");
+            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Tous les articles");
+            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Familles");
+            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Marques");
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fichierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.actualiserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -56,7 +56,7 @@ namespace Bacchus
             this.fichierToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1353, 28);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -94,9 +94,9 @@ namespace Bacchus
             // statusStrip1
             // 
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.statusStrip1.Location = new System.Drawing.Point(0, 428);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 651);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(800, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1353, 22);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -114,8 +114,8 @@ namespace Bacchus
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.ListView);
-            this.splitContainer1.Size = new System.Drawing.Size(800, 400);
-            this.splitContainer1.SplitterDistance = 266;
+            this.splitContainer1.Size = new System.Drawing.Size(1353, 623);
+            this.splitContainer1.SplitterDistance = 215;
             this.splitContainer1.TabIndex = 2;
             // 
             // TreeView
@@ -123,19 +123,19 @@ namespace Bacchus
             this.TreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TreeView.Location = new System.Drawing.Point(0, 0);
             this.TreeView.Name = "TreeView";
-            treeNode1.Name = "NoeudTousArticles";
-            treeNode1.Text = "Tous les articles";
-            treeNode2.Name = "NoeudFamilles";
-            treeNode2.Text = "Familles";
-            treeNode3.Name = "NoeudMarque";
-            treeNode3.Text = "Marques";
+            treeNode7.Name = "NoeudTousArticles";
+            treeNode7.Text = "Tous les articles";
+            treeNode8.Name = "NoeudFamilles";
+            treeNode8.Text = "Familles";
+            treeNode9.Name = "NoeudMarque";
+            treeNode9.Text = "Marques";
             this.TreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2,
-            treeNode3});
-            this.TreeView.Size = new System.Drawing.Size(266, 400);
+            treeNode7,
+            treeNode8,
+            treeNode9});
+            this.TreeView.Size = new System.Drawing.Size(215, 623);
             this.TreeView.TabIndex = 0;
-            this.TreeView.NodeMouseClick += this.TreeView_NodeMouseClick;
+            this.TreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeView_NodeMouseClick);
             // 
             // ListView
             // 
@@ -143,7 +143,7 @@ namespace Bacchus
             this.ListView.HideSelection = false;
             this.ListView.Location = new System.Drawing.Point(0, 0);
             this.ListView.Name = "ListView";
-            this.ListView.Size = new System.Drawing.Size(530, 400);
+            this.ListView.Size = new System.Drawing.Size(1134, 623);
             this.ListView.TabIndex = 0;
             this.ListView.UseCompatibleStateImageBehavior = false;
             this.ListView.View = System.Windows.Forms.View.Details;
@@ -152,14 +152,16 @@ namespace Bacchus
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1353, 673);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.MinimumSize = new System.Drawing.Size(640, 360);
+            this.MinimumSize = new System.Drawing.Size(950, 360);
             this.Name = "FormMain";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Gestionnaire de base de donnée";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormMain_KeyDown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -170,11 +172,6 @@ namespace Bacchus
             this.PerformLayout();
 
         }
-
-        //private void myEventHandler(object sender, EventArgs e)
-        //{
-        //    Console.WriteLine("clik");
-        //}
 
         #endregion
 

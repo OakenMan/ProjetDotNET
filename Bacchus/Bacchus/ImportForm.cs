@@ -64,7 +64,7 @@ namespace Bacchus
             List<Article> ListeArticle = new List<Article>();
 
             FileStream Stream = new FileStream(FilePath, FileMode.Open);
-            using (StreamReader Reader = new StreamReader(Stream, Encoding.UTF8))
+            using (StreamReader Reader = new StreamReader(Stream, Encoding.Default))
             {
                 // On lit la première ligne pour passer le nom des colonnes
                 var line = Reader.ReadLine();

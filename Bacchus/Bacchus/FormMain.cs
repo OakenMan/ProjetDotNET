@@ -12,6 +12,11 @@ namespace Bacchus
 {
     public partial class FormMain : Form
     {
+        private string ListViewDisplay = "ARTICLES";
+        private string ListViewCondition = "";
+        private string ListViewValue = "";
+        private string ListViewValue2 = "";
+
         /// <summary>
         /// Constructeur
         /// </summary>
@@ -22,17 +27,13 @@ namespace Bacchus
 
             // Change la taille minimum de la section gauche (la TreeView)
             splitContainer1.Panel1MinSize = 200;
+            KeyPreview = true;
 
             RefreshDisplay();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
         /// <summary>
-        /// Fonction appelée en cliquant sur le menu "Importer".
+        /// Event déclenché en cliquant sur le menu "Importer".
         /// Affiche une fenêtre qui permet d'importer un fichier CSV dans la BDD
         /// </summary>
         /// <param name="sender"></param>
@@ -44,7 +45,7 @@ namespace Bacchus
         }
 
         /// <summary>
-        /// Fonction appelée en cliquant sur le menu "Exporter".
+        /// Event déclenché en cliquant sur le menu "Exporter".
         /// Affiche une fenêtre qui permet d'exporter la BDD dans un fichier CSV
         /// </summary>
         /// <param name="sender"></param>
@@ -56,7 +57,7 @@ namespace Bacchus
         }
 
         /// <summary>
-        /// Fonction appelée en cliquant sur le menu "Actualiser".
+        /// Event déclenché en cliquant sur le menu "Actualiser".
         /// Actualise la treeView et la listView
         /// </summary>
         /// <param name="sender"></param>
@@ -66,11 +67,18 @@ namespace Bacchus
             RefreshDisplay();
         }
 
+        /// <summary>
+        /// Actualise l'affichage de l'application (TreeView et ListView)
+        /// </summary>
         private void RefreshDisplay()
         {
             RefreshTreeView();
+            RefreshListView();
         }
 
+        /// <summary>
+        /// Actualise le contenu de la TreeView
+        /// </summary>
         private void RefreshTreeView()
         {
             TreeView.BeginUpdate();
@@ -107,36 +115,158 @@ namespace Bacchus
         }
 
         /// <summary>
-        /// Fonction appelée à chaque clic de souris sur un élément de la TreeView
+        /// Actualise le contenu de la ListView
+        /// </summary>
+        private void RefreshListView()
+        {
+            Console.WriteLine("{0}, {1}, {2}, {3}", ListViewDisplay, ListViewCondition, ListViewValue, ListViewValue2);
+
+            // Paramètres de la ListView
+            ListView.GridLines = true;
+            ListView.FullRowSelect = true;
+            ListView.Sorting = SortOrder.Ascending;
+
+            // On nettoie la ListView
+            ListView.Columns.Clear();
+            ListView.Items.Clear();
+
+            // Si on veut afficher des articles
+            if (ListViewDisplay == "ARTICLES")
+            {
+                ListView.Columns.Add("Description", 150, HorizontalAlignment.Left);
+                ListView.Columns.Add("Famille", 150, HorizontalAlignment.Left);
+                ListView.Columns.Add("Sous-Famille", 150, HorizontalAlignment.Left);
+                ListView.Columns.Add("Marque", 100, HorizontalAlignment.Left);
+                ListView.Columns.Add("PrixHT", 100, HorizontalAlignment.Center);
+                ListView.Columns.Add("Quantité", 100, HorizontalAlignment.Center);
+            }
+            // Si on veut afficher des marques, des familles ou des sous-familles
+            else
+            {
+                ListView.Columns.Add("Description", -2, HorizontalAlignment.Left);
+            }
+
+            DAO dao = new DAO();
+
+            // Si on veut afficher tous les articles
+            if(ListViewDisplay == "ARTICLES")
+            {
+                List<Article> ListeArticles = new List<Article>();
+                
+                if(ListViewCondition == "")
+                {
+                    ListeArticles = dao.GetAllArticles();
+                }
+                else if(ListViewCondition == "MARQUE")
+                {
+                    //ListeArticles = dao.GetArticlesWhereMarque(ListViewValue);
+                }
+                else if(ListViewCondition == "SOUSFAMILLE")
+                {
+                    //ListeArticles = dao.GetArticlesWhereSousFamille(ListViewValue2, ListViewValue);
+                }
+
+                // Enfin, on ajoute tous les articles à la ListView
+                foreach (Article NewArticle in ListeArticles)
+                {
+                    ListViewItem Item = new ListViewItem(NewArticle.Description);
+                    Item.SubItems.Add(NewArticle.Famille);
+                    Item.SubItems.Add(NewArticle.SousFamille);
+                    Item.SubItems.Add(NewArticle.Marque);
+                    Item.SubItems.Add(NewArticle.PrixHT.ToString());
+                    Item.SubItems.Add(NewArticle.Quantite.ToString());
+                    ListView.Items.Add(Item);
+                }
+            }
+            else if(ListViewDisplay == "MARQUES")
+            {
+                List<string> ListeMarques = dao.GetAllMarques();
+                foreach(string Marque in ListeMarques)
+                {
+                    ListView.Items.Add(new ListViewItem(Marque));
+                }
+            }
+            else if(ListViewDisplay == "FAMILLES")
+            {
+                List<string> ListeFamilles = dao.GetAllFamilles();
+                foreach(string Famille in ListeFamilles)
+                {
+                    ListView.Items.Add(new ListViewItem(Famille));
+                }
+            }
+            else if(ListViewDisplay == "SOUSFAMILLES")
+            {
+                List<string> ListeSousFamilles = dao.GetAllSousFamilles(dao.GetRefFamille(ListViewValue));
+                foreach(string SousFamille in ListeSousFamilles)
+                {
+                    ListView.Items.Add(new ListViewItem(SousFamille));
+                }
+            }
+            else
+            {
+                Console.WriteLine("Erreur in RefreshListView");
+            } 
+        }
+
+        /// <summary>
+        /// Event déclenché à chaque clic de souris sur un élément de la TreeView
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void TreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if(e.Node.Text == "Tous les articles")
+            Console.WriteLine("click");
+
+            ListViewDisplay = "";
+            ListViewCondition = "";
+            ListViewValue = "";
+            ListViewValue2 = "";
+
+            if (e.Node.Text == "Tous les articles")
             {
-                Console.WriteLine("Afficher tous les articles");
+                ListViewDisplay = "ARTICLES";
             }
             else if(e.Node.Text == "Familles")
             {
-                Console.WriteLine("Afficher la liste des familles");
+                ListViewDisplay = "FAMILLES";
             }
             else if(e.Node.Text == "Marques")
             {
-                Console.WriteLine("Afficher la liste des marques");
+                ListViewDisplay = "MARQUES";
             }
             else if(e.Node.Parent.Text == "Familles")
             {
-                Console.WriteLine("Afficher la liste des sous-familles de la famille [" + e.Node.Text + "]");
+                ListViewDisplay = "SOUSFAMILLES";
+                ListViewValue = e.Node.Text;
             }
             else if(e.Node.Parent.Text == "Marques")
             {
-                Console.WriteLine("Afficher les articles de la marque [" + e.Node.Text + "]");
+                ListViewDisplay = "ARTICLES";
+                ListViewCondition = "MARQUE";
+                ListViewValue = e.Node.Text;
             }
             else
             {
-                Console.WriteLine("Afficher les articles de la sous-famille [" + e.Node.Text + "]");
+                ListViewDisplay = "ARTICLES";
+                ListViewCondition = "SOUSFAMILLE";
+                ListViewValue = e.Node.Text;
+                ListViewValue2 = e.Node.Parent.Text;
             }
+
+            RefreshListView();
+        }
+
+        private void FormMain_KeyDown(object sender, KeyEventArgs e)
+        {
+            // TODO : trouver un moyen d'ignorer la répétition d'inputs
+            switch(e.KeyCode)
+            {
+                case Keys.Enter:  Console.WriteLine("Enter"); break;
+                case Keys.Delete: Console.WriteLine("Suppr"); break;
+                case Keys.F5:     Console.WriteLine("F5");    break;
+                default: break;
+            }
+            e.Handled = true;
         }
     }
 }

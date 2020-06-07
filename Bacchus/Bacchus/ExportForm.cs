@@ -24,7 +24,7 @@ namespace Bacchus
             Console.WriteLine("création du csv à {0} avec {1} articles", FilePath, ListeArticles.Count);
 
             FileStream Stream = new FileStream(FilePath, FileMode.OpenOrCreate);
-            using (StreamWriter Writer = new StreamWriter(Stream, Encoding.UTF8))
+            using (StreamWriter Writer = new StreamWriter(Stream, Encoding.Default))
             {
                 Writer.WriteLine("Description;Ref;Marque;Famille;Sous-Famille;Prix H.T.");
                 foreach(Article NewArticle in ListeArticles)

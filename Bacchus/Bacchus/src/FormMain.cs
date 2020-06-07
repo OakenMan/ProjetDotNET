@@ -12,6 +12,8 @@ namespace Bacchus
         private string ListViewValue = "";
         private string ListViewValue2 = "";
 
+        private ColumnHeader SortingColumn = null;
+
         /// <summary>
         /// Constructeur
         /// </summary>
@@ -158,12 +160,12 @@ namespace Bacchus
                 // Les articles d'une certaine marque
                 else if(ListViewCondition == "MARQUE")
                 {
-                    //ListeArticles = dao.GetArticlesWhereMarque(ListViewValue);
+                    ListeArticles = daoArticle.GetArticlesWhereMarque(ListViewValue);
                 }
                 // Les articles d'une certaine sous-famille
                 else if(ListViewCondition == "SOUSFAMILLE")
                 {
-                    //ListeArticles = dao.GetArticlesWhereSousFamille(ListViewValue2, ListViewValue);
+                    ListeArticles = daoArticle.GetArticlesWhereSousFamille(ListViewValue2, ListViewValue);
                 }
 
                 // Enfin, on ajoute tous les articles à la ListView
@@ -268,12 +270,71 @@ namespace Bacchus
             // TODO : trouver un moyen d'ignorer la répétition d'inputs
             switch(e.KeyCode)
             {
-                case Keys.Enter:  Console.WriteLine("Enter"); break;
-                case Keys.Delete: Console.WriteLine("Suppr"); break;
-                case Keys.F5:     Console.WriteLine("F5");    break;
-                default: break;
+                case Keys.Enter:    Console.WriteLine("Enter");     break;
+                case Keys.Delete:   Console.WriteLine("Suppr");     break;
+                case Keys.F5:       RefreshDisplay();               break;
+                default:                                            break;
             }
             e.Handled = true;
+        }
+
+        /// <summary>
+        /// Event déclenché lors d'un clic de souris sur une colonne de la ListView.
+        /// Trie la ListView en fonction de la colonne sur laquelle on a cliqué
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ListView_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            // On récupère la colonne à trier
+            ColumnHeader NewSortingColumn = ListView.Columns[e.Column];
+
+            // On récupère l'ordre de tri
+            System.Windows.Forms.SortOrder SortOrder;
+            if(SortingColumn == null)
+            {
+                SortOrder = SortOrder.Ascending;
+            }
+            else
+            {
+                // Si c'est la même colonne
+                if(NewSortingColumn == SortingColumn)
+                {
+                    // On inverse l'ordre de tri
+                    if(SortingColumn.Text.StartsWith("> "))
+                    {
+                        SortOrder = SortOrder.Descending;
+                    }
+                    else
+                    {
+                        SortOrder = SortOrder.Ascending;
+                    }
+                }
+                // Sinon on tri dans l'ordre alphabétique
+                else
+                {
+                    SortOrder = SortOrder.Ascending;
+                }
+
+                SortingColumn.Text = SortingColumn.Text.Substring(2);
+            }
+
+            // On affiche le nouvel ordre de tri
+            SortingColumn = NewSortingColumn;
+            if(SortOrder == SortOrder.Ascending)
+            {
+                SortingColumn.Text = "> " + SortingColumn.Text;
+            }
+            else
+            {
+                SortingColumn.Text = "< " + SortingColumn.Text;
+            }
+
+            // On applique le Comparer
+            ListView.ListViewItemSorter = new ListViewComparer(e.Column, SortOrder);
+
+            // Et on trie
+            ListView.Sort();
         }
     }
 }

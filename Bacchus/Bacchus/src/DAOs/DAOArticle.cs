@@ -202,5 +202,66 @@ namespace Bacchus.src.DAOs
             return ListeRefArticles;
         }
 
+        /// <summary>
+        /// Renvoie la liste de tous les articles de la marque "Marque"
+        /// </summary>
+        /// <param name="Marque"></param>
+        /// <returns></returns>
+        public List<Article> GetArticlesWhereMarque(string Marque)
+        {
+            List<Article> ListeArticles = new List<Article>();
+
+            DAOMarque daoMarque = new DAOMarque();
+            int RefMarque = daoMarque.GetRefMarque(Marque);
+
+            string Cmd = "SELECT RefArticle FROM Articles WHERE RefMarque = " + RefMarque;
+            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
+
+            // On récupère la liste des RefArticle
+            using (SQLiteDataReader Reader = Command.ExecuteReader())
+            {
+                while (Reader.Read())
+                {
+                    // Pour chaque RefArticle, on récupère l'article correspondant et on l'ajoute à la liste
+                    Article NewArticle = GetArticle(Reader.GetString(0));
+                    ListeArticles.Add(NewArticle);
+                }
+            }
+
+            return ListeArticles;
+        }
+
+        /// <summary>
+        /// Renvoie la liste de tous les articles dans la famille "Famille" et la sous-famille "SousFamille"
+        /// </summary>
+        /// <param name="Famille"></param>
+        /// <param name="SousFamille"></param>
+        /// <returns></returns>
+        public List<Article> GetArticlesWhereSousFamille(string Famille, string SousFamille)
+        {
+            List<Article> ListeArticles = new List<Article>();
+
+            DAOSousFamille daoSousFamille = new DAOSousFamille();
+            DAOFamille daoFamille = new DAOFamille();
+
+            int RefFamille = daoFamille.GetRefFamille(Famille);
+            int RefSousFamille = daoSousFamille.GetRefSousFamille(RefFamille, SousFamille);
+
+            string Cmd = "SELECT RefArticle FROM Articles WHERE RefSousFamille = " + RefSousFamille;
+            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
+
+            // On récupère la liste des articles
+            using (SQLiteDataReader Reader = Command.ExecuteReader())
+            {
+                while (Reader.Read())
+                {
+                    // Pour chaque RefArticle, on récupère l'article correspondant et on l'ajoute à la liste
+                    Article NewArticle = GetArticle(Reader.GetString(0));
+                    ListeArticles.Add(NewArticle);
+                }
+            }
+
+            return ListeArticles;
+        }
     }
 }

@@ -65,6 +65,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ListViewComparer.cs" />
     <Compile Include="src\Article.cs" />
     <Compile Include="src\DAOs\DAO.cs" />
     <Compile Include="src\DAOs\DAOArticle.cs" />

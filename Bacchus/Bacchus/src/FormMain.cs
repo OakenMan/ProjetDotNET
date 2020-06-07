@@ -143,7 +143,10 @@ namespace Bacchus
                 ListView.Columns.Add("Description", -2, HorizontalAlignment.Left);
             }
 
-            DAO dao = new DAO();
+            DAOArticle daoArticle = new DAOArticle();
+            DAOMarque daoMarque = new DAOMarque();
+            DAOFamille daoFamille = new DAOFamille();
+            DAOSousFamille daoSousFamille = new DAOSousFamille();
 
             // Si on veut afficher tous les articles
             if(ListViewDisplay == "ARTICLES")
@@ -152,7 +155,7 @@ namespace Bacchus
                 
                 if(ListViewCondition == "")
                 {
-                    ListeArticles = dao.GetAllArticles();
+                    ListeArticles = daoArticle.GetAllArticles();
                 }
                 else if(ListViewCondition == "MARQUE")
                 {
@@ -177,7 +180,7 @@ namespace Bacchus
             }
             else if(ListViewDisplay == "MARQUES")
             {
-                List<string> ListeMarques = dao.GetAllMarques();
+                List<string> ListeMarques = daoMarque.GetAllMarques();
                 foreach(string Marque in ListeMarques)
                 {
                     ListView.Items.Add(new ListViewItem(Marque));
@@ -185,7 +188,7 @@ namespace Bacchus
             }
             else if(ListViewDisplay == "FAMILLES")
             {
-                List<string> ListeFamilles = dao.GetAllFamilles();
+                List<string> ListeFamilles = daoFamille.GetAllFamilles();
                 foreach(string Famille in ListeFamilles)
                 {
                     ListView.Items.Add(new ListViewItem(Famille));
@@ -193,7 +196,7 @@ namespace Bacchus
             }
             else if(ListViewDisplay == "SOUSFAMILLES")
             {
-                List<string> ListeSousFamilles = dao.GetAllSousFamilles(dao.GetRefFamille(ListViewValue));
+                List<string> ListeSousFamilles = daoSousFamille.GetAllSousFamilles(daoFamille.GetRefFamille(ListViewValue));
                 foreach(string SousFamille in ListeSousFamilles)
                 {
                     ListView.Items.Add(new ListViewItem(SousFamille));

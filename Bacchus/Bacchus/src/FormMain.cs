@@ -118,12 +118,13 @@ namespace Bacchus
         /// </summary>
         private void RefreshListView()
         {
-            Console.WriteLine("{0}, {1}, {2}, {3}", ListViewDisplay, ListViewCondition, ListViewValue, ListViewValue2);
-
             // Paramètres de la ListView
             ListView.GridLines = true;
-            ListView.FullRowSelect = true;
-            ListView.Sorting = SortOrder.Ascending;
+            ListView.FullRowSelect = true;              // Sélection d'une ligne tout entière
+            ListView.MultiSelect = false;               // Pas possible de sélectionner plusieurs lignes
+            ListView.Sorting = SortOrder.Ascending;     // Mode de tri par défaut
+            
+            //ListView.ContextMenu = ??? aller voir ListView.ContextMenu sur la doc
 
             // On nettoie la ListView
             ListView.Columns.Clear();
@@ -132,12 +133,13 @@ namespace Bacchus
             // Si on veut afficher des articles
             if (ListViewDisplay == "ARTICLES")
             {
+                ListView.Columns.Add("Réference", 75, HorizontalAlignment.Center);
                 ListView.Columns.Add("Description", 150, HorizontalAlignment.Left);
                 ListView.Columns.Add("Famille", 150, HorizontalAlignment.Left);
                 ListView.Columns.Add("Sous-Famille", 150, HorizontalAlignment.Left);
                 ListView.Columns.Add("Marque", 100, HorizontalAlignment.Left);
-                ListView.Columns.Add("PrixHT", 100, HorizontalAlignment.Center);
-                ListView.Columns.Add("Quantité", 100, HorizontalAlignment.Center);
+                ListView.Columns.Add("PrixHT", 75, HorizontalAlignment.Center);
+                ListView.Columns.Add("Quantité", 75, HorizontalAlignment.Center);
             }
             // Si on veut afficher des marques, des familles ou des sous-familles
             else
@@ -171,7 +173,8 @@ namespace Bacchus
                 // Enfin, on ajoute tous les articles à la ListView
                 foreach (Article NewArticle in ListeArticles)
                 {
-                    ListViewItem Item = new ListViewItem(NewArticle.Description);
+                    ListViewItem Item = new ListViewItem(NewArticle.RefArticle);
+                    Item.SubItems.Add(NewArticle.Description);
                     Item.SubItems.Add(NewArticle.Famille);
                     Item.SubItems.Add(NewArticle.SousFamille);
                     Item.SubItems.Add(NewArticle.Marque);
@@ -270,10 +273,27 @@ namespace Bacchus
             // TODO : trouver un moyen d'ignorer la répétition d'inputs
             switch(e.KeyCode)
             {
-                case Keys.Enter:    Console.WriteLine("Enter");     break;
-                case Keys.Delete:   Console.WriteLine("Suppr");     break;
-                case Keys.F5:       RefreshDisplay();               break;
-                default:                                            break;
+                case Keys.Enter:
+                    ArticleForm Form;
+                    // Ouverture en mode "Création d'article"
+                    if (ListView.SelectedItems.Count == 0)
+                    {
+                        Form = new ArticleForm();
+                    }
+                    // Ouverture en mode "Modification d'article"
+                    else
+                    {
+                        Form = new ArticleForm(ListView.SelectedItems[0].Text);
+                    }
+                    Form.Show();
+                    break;
+                case Keys.Delete:
+                    Console.WriteLine("Suppr");
+                    break;
+                case Keys.F5:
+                    RefreshDisplay();
+                    break;
+                default: break;
             }
             e.Handled = true;
         }

@@ -13,7 +13,7 @@ namespace Bacchus
         public ExportForm()
         {
             InitializeComponent();
-            CenterToScreen();
+            //CenterToScreen();
         }
 
         private void CreateCSV(string FilePath, List<Article> ListeArticles)

@@ -65,7 +65,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ListViewComparer.cs" />
+    <Compile Include="src\ArticleForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\ArticleForm.Designer.cs">
+      <DependentUpon>ArticleForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\ListViewComparer.cs" />
     <Compile Include="src\Article.cs" />
     <Compile Include="src\DAOs\DAO.cs" />
     <Compile Include="src\DAOs\DAOArticle.cs" />
@@ -92,6 +98,9 @@
     </Compile>
     <Compile Include="src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="src\ArticleForm.resx">
+      <DependentUpon>ArticleForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="src\ExportForm.resx">
       <DependentUpon>ExportForm.cs</DependentUpon>
     </EmbeddedResource>

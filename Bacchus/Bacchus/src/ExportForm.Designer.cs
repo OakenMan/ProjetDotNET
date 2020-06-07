@@ -62,10 +62,8 @@
             this.ProgressBar.Location = new System.Drawing.Point(8, 58);
             this.ProgressBar.Name = "ProgressBar";
             this.ProgressBar.Size = new System.Drawing.Size(542, 39);
-            this.ProgressBar.TabIndex = 1;
-            this.ProgressBar.Minimum = 0;
-            this.ProgressBar.Value = 0;
             this.ProgressBar.Step = 1;
+            this.ProgressBar.TabIndex = 1;
             // 
             // ExportForm
             // 
@@ -76,6 +74,7 @@
             this.MaximumSize = new System.Drawing.Size(580, 150);
             this.MinimumSize = new System.Drawing.Size(580, 150);
             this.Name = "ExportForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Exporter un fichier CSV";
             this.flowLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);

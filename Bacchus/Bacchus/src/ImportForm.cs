@@ -13,7 +13,7 @@ namespace Bacchus
         public ImportForm()
         {
             InitializeComponent();
-            CenterToScreen();
+            //CenterToScreen();
         }
 
         /// <summary>

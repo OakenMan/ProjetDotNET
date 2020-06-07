@@ -1,14 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Data.SQLite;
-using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using Bacchus.src.DAOs;
 
 namespace Bacchus
 {
@@ -112,9 +107,10 @@ namespace Bacchus
             List<Article> ListeArticle = Parser(FileTextBox.Text);
             ProgressBar.Maximum = ListeArticle.Count;
 
+            DAOArticle daoArticle = new DAOArticle();
             foreach (Article NewArticle in ListeArticle)
             {
-                dao.AddOrUpdateArticle(NewArticle);
+                daoArticle.AddOrUpdateArticle(NewArticle);
                 ProgressBar.PerformStep();
             }
 
@@ -144,10 +140,11 @@ namespace Bacchus
 
             DAO dao = new DAO();
 
+            DAOArticle daoArticle = new DAOArticle();
             // On ajoute chaque article à la BDD (le DAO s'occupe d'ajouter OU de mettre à jour les articles)
             foreach (Article NewArticle in ListeArticle)
             {
-                dao.AddOrUpdateArticle(NewArticle);
+                daoArticle.AddOrUpdateArticle(NewArticle);
                 // ### TODO : si on a le temps, faire que AddArticle renvoie un int en fonction de si l'article a été ajouté ou modifié
                 // ### de cette manière, on peut afficher dans le MessageBox la proportion d'articles ajoutés/modifiés.
                 ProgressBar.PerformStep();

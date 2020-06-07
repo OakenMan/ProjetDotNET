@@ -7,12 +7,16 @@ namespace Bacchus
 {
     public partial class FormMain : Form
     {
-        private string ListViewDisplay = "ARTICLES";
-        private string ListViewCondition = "";
-        private string ListViewValue = "";
-        private string ListViewValue2 = "";
+        /********** ATTRIBUTS **********/
 
-        private ColumnHeader SortingColumn = null;
+        // "Filtres" utilisés pour décider de quoi afficher dans la ListView
+        // TODO : à remplacer par des Enums pour plus de propreté/sécurité
+        private string ListViewDisplay = "ARTICLES";    // "Catégorie" à afficher : ARTICLES, MARQUES, FAMILLES ou SOUSFAMILLE
+        private string ListViewCondition = "";          // "Condition" sur les éléments à afficher : MARQUE/SOUSFAMILLE si on veut afficher des articles, FAMILLE si on veut afficher des sous-familles
+        private string ListViewValue = "";              // Valeur de la condition (ex: nom de la marque, de la famille...)
+        private string ListViewValue2 = "";             // 2ème champ pour la valeur de la condition, utilisée pour contenir de nom de la famille lorsqu'on veut afficher les articles d'une sous-famille
+
+        private ColumnHeader SortingColumn = null;      // Colonne sur lequelle est appliqué le tri de la ListView
 
         /// <summary>
         /// Constructeur
@@ -22,47 +26,13 @@ namespace Bacchus
             InitializeComponent();
             CenterToScreen();
 
-            // Change la taille minimum de la section gauche (la TreeView)
-            splitContainer1.Panel1MinSize = 200;
-            KeyPreview = true;
+            splitContainer1.Panel1MinSize = 200;    // Change la taille minimum de la section gauche (la TreeView)
+            KeyPreview = true;                      // Pour pouvoir intercepter les inputs clavier
 
             RefreshDisplay();
         }
 
-        /// <summary>
-        /// Event déclenché en cliquant sur le menu "Importer".
-        /// Affiche une fenêtre qui permet d'importer un fichier CSV dans la BDD
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void importerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ImportForm Form = new ImportForm();
-            Form.Show();
-        }
-
-        /// <summary>
-        /// Event déclenché en cliquant sur le menu "Exporter".
-        /// Affiche une fenêtre qui permet d'exporter la BDD dans un fichier CSV
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void exporterToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ExportForm Form = new ExportForm();
-            Form.Show();
-        }
-
-        /// <summary>
-        /// Event déclenché en cliquant sur le menu "Actualiser".
-        /// Actualise la treeView et la listView
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void actualiserToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            RefreshDisplay();
-        }
+        /********** MÉTHODES **********/
 
         /// <summary>
         /// Actualise l'affichage de l'application (TreeView et ListView)
@@ -74,7 +44,7 @@ namespace Bacchus
         }
 
         /// <summary>
-        /// Actualise le contenu de la TreeView
+        /// Actualise le contenu de la TreeView.
         /// </summary>
         private void RefreshTreeView()
         {
@@ -130,6 +100,7 @@ namespace Bacchus
             ListView.Columns.Clear();
             ListView.Items.Clear();
 
+            // ----------- AFFICHAGE DES COLONNES -----------
             // Si on veut afficher des articles
             if (ListViewDisplay == "ARTICLES")
             {
@@ -147,8 +118,9 @@ namespace Bacchus
                 ListView.Columns.Add("Description", -2, HorizontalAlignment.Left);
             }
 
+            // ----------- AFFICHAGE DES ELEMENTS -----------
             // Si on veut afficher des articles
-            if(ListViewDisplay == "ARTICLES")
+            if (ListViewDisplay == "ARTICLES")
             {
                 DAOArticle daoArticle = new DAOArticle();
 
@@ -170,7 +142,7 @@ namespace Bacchus
                     ListeArticles = daoArticle.GetArticlesWhereSousFamille(ListViewValue2, ListViewValue);
                 }
 
-                // Enfin, on ajoute tous les articles à la ListView
+                // On ajoute tous les articles à la ListView
                 foreach (Article NewArticle in ListeArticles)
                 {
                     ListViewItem Item = new ListViewItem(NewArticle.RefArticle);
@@ -183,6 +155,7 @@ namespace Bacchus
                     ListView.Items.Add(Item);
                 }
             }
+            // Si on veut afficher toutes les marques
             else if(ListViewDisplay == "MARQUES")
             {
                 DAOMarque daoMarque = new DAOMarque();
@@ -193,6 +166,7 @@ namespace Bacchus
                     ListView.Items.Add(new ListViewItem(Marque));
                 }
             }
+            // Si on veut afficher toutes les familles
             else if(ListViewDisplay == "FAMILLES")
             {
                 DAOFamille daoFamille = new DAOFamille();
@@ -203,6 +177,7 @@ namespace Bacchus
                     ListView.Items.Add(new ListViewItem(Famille));
                 }
             }
+            // Si on veut afficher les sous-familles d'une famille
             else if(ListViewDisplay == "SOUSFAMILLES")
             {
                 DAOSousFamille daoSousFamille = new DAOSousFamille();
@@ -221,7 +196,87 @@ namespace Bacchus
         }
 
         /// <summary>
-        /// Event déclenché à chaque clic de souris sur un élément de la TreeView
+        /// Ouvre le menu de création/modification d'élément (Article, Marque, Famille ou Sous-Famille)
+        /// </summary>
+        private void OpenCreateModifyMenu()
+        {
+            Form Form = null;
+
+            TreeNode Node = TreeView.SelectedNode;
+
+            // On veut créer/modifier un article
+            if (Node.Text == "Tous les articles")
+            {
+                if (ListView.SelectedItems.Count == 0)
+                {
+                    Form = new ArticleForm();
+                }
+                else
+                {
+                    Form = new ArticleForm(ListView.SelectedItems[0].Text);
+                }
+            }
+            // On veut créer/modifier une famille
+            else if(Node.Text == "Familles")
+            {
+                if (ListView.SelectedItems.Count == 0)
+                {
+                    Form = new FamilleForm();
+                }
+                else
+                {
+                    Form = new FamilleForm(ListView.SelectedItems[0].Text);
+                }
+            }
+            // On veut créer/modifier une marque
+            else if (Node.Text == "Marques")
+            {
+                if (ListView.SelectedItems.Count == 0)
+                {
+                    Form = new MarqueForm();
+                }
+                else
+                {
+                    Form = new MarqueForm(ListView.SelectedItems[0].Text);
+                }
+            }
+            // On veut créer/modifier une sous-famille
+            else if (Node.Parent.Text == "Familles")
+            {
+                if (ListView.SelectedItems.Count == 0)
+                {
+                    Form = new SousFamilleForm();
+                }
+                else
+                {
+                    Form = new SousFamilleForm(Node.Text, ListView.SelectedItems[0].Text);
+                }
+            }
+            // On veut créer/modifier un article
+            else
+            {
+                if (ListView.SelectedItems.Count == 0)
+                {
+                    Form = new ArticleForm();
+                }
+                else
+                {
+                    Form = new ArticleForm(ListView.SelectedItems[0].Text);
+                }
+            }
+
+            if(Form != null)
+            {
+                // Affiche la fenêtre
+                Form.Show();
+            }
+        }
+
+        /********** ÉVÉNEMENTS **********/
+
+        /// <summary>
+        /// Event déclenché à chaque clic de souris sur un élément de la TreeView.
+        /// Affiche les éléments correspondants dans la ListView.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -238,20 +293,20 @@ namespace Bacchus
             {
                 ListViewDisplay = "ARTICLES";
             }
-            else if(e.Node.Text == "Familles")
+            else if (e.Node.Text == "Familles")
             {
                 ListViewDisplay = "FAMILLES";
             }
-            else if(e.Node.Text == "Marques")
+            else if (e.Node.Text == "Marques")
             {
                 ListViewDisplay = "MARQUES";
             }
-            else if(e.Node.Parent.Text == "Familles")
+            else if (e.Node.Parent.Text == "Familles")
             {
                 ListViewDisplay = "SOUSFAMILLES";
                 ListViewValue = e.Node.Text;
             }
-            else if(e.Node.Parent.Text == "Marques")
+            else if (e.Node.Parent.Text == "Marques")
             {
                 ListViewDisplay = "ARTICLES";
                 ListViewCondition = "MARQUE";
@@ -268,28 +323,26 @@ namespace Bacchus
             RefreshListView();
         }
 
+        /// <summary>
+        /// Event déclenché lorsque l'utilisateur appuie sur une touche.
+        /// En fonction de la touche pressée, effectue diverses actions.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void FormMain_KeyDown(object sender, KeyEventArgs e)
         {
             // TODO : trouver un moyen d'ignorer la répétition d'inputs
             switch(e.KeyCode)
             {
+                // Touche "Entrée" ---> Ouverture de la fenêtre de création/modification
                 case Keys.Enter:
-                    ArticleForm Form;
-                    // Ouverture en mode "Création d'article"
-                    if (ListView.SelectedItems.Count == 0)
-                    {
-                        Form = new ArticleForm();
-                    }
-                    // Ouverture en mode "Modification d'article"
-                    else
-                    {
-                        Form = new ArticleForm(ListView.SelectedItems[0].Text);
-                    }
-                    Form.Show();
+                    OpenCreateModifyMenu();
                     break;
+                // Touche "Suppr" ---> Ouverture d'un pop-up de confirmation de suppression
                 case Keys.Delete:
                     Console.WriteLine("Suppr");
                     break;
+                // Touche "F5" ---> Actualise l'affichage de la TreeView et de la ListView
                 case Keys.F5:
                     RefreshDisplay();
                     break;
@@ -300,7 +353,7 @@ namespace Bacchus
 
         /// <summary>
         /// Event déclenché lors d'un clic de souris sur une colonne de la ListView.
-        /// Trie la ListView en fonction de la colonne sur laquelle on a cliqué
+        /// Trie la ListView en fonction de la colonne sur laquelle on a cliqué.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -355,6 +408,52 @@ namespace Bacchus
 
             // Et on trie
             ListView.Sort();
+        }
+
+        /// <summary>
+        /// Event déclenché lors d'un double-clic sur un élément de la ListView.
+        /// Ouvre la fenêtre de modification de cet élément.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ListView_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            OpenCreateModifyMenu();
+        }
+
+        /// <summary>
+        /// Event déclenché en cliquant sur le menu "Importer".
+        /// Affiche une fenêtre qui permet d'importer un fichier CSV dans la BDD.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void importerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ImportForm Form = new ImportForm();
+            Form.Show();
+        }
+
+        /// <summary>
+        /// Event déclenché en cliquant sur le menu "Exporter".
+        /// Affiche une fenêtre qui permet d'exporter la BDD dans un fichier CSV.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void exporterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExportForm Form = new ExportForm();
+            Form.Show();
+        }
+
+        /// <summary>
+        /// Event déclenché en cliquant sur le menu "Actualiser".
+        /// Actualise la TreeView et la ListView.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void actualiserToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RefreshDisplay();
         }
     }
 }

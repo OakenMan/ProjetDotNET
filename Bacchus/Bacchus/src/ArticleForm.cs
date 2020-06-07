@@ -36,5 +36,10 @@ namespace Bacchus
             // Si RefArticle est vide ==> création d'un nouvel article
             // Sinon, récupérer l'article avec un DAO et remplir les différents champs avec les valeurs de l'article
         }
+
+        private void ConfirmButton_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

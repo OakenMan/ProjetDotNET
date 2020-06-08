@@ -118,5 +118,28 @@ namespace Bacchus.src.DAOs
                 return Reader.GetInt16(0);
             }
         }
+
+        public int DeleteFamille(int RefFamille)
+        {
+            // Supprime toutes les sous-familles appartenant à cette famille
+            string Cmd = "SELECT RefSousFamille FROM SousFamilles WHERE RefFamille = " + RefFamille;
+            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
+
+            using (SQLiteDataReader Reader = Command.ExecuteReader())
+            {
+                while(Reader.Read())
+                {
+                    Cmd = "DELETE FROM SousFamilles WHERE RefSousFamille = " + Reader.GetInt16(0);
+                    Command = new SQLiteCommand(Cmd, Connection);
+                    Command.ExecuteNonQuery();
+                }
+            }
+
+            // Supprime la famille
+            Cmd = "DELETE FROM Familles WHERE RefFamille = " + RefFamille;
+            Command = new SQLiteCommand(Cmd, Connection);
+
+            return Command.ExecuteNonQuery();
+        }
     }
 }

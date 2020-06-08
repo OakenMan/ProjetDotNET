@@ -126,7 +126,7 @@
             this.MaximumSize = new System.Drawing.Size(580, 150);
             this.MinimumSize = new System.Drawing.Size(580, 150);
             this.Name = "ImportForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Importer un fichier SQL";
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel4.ResumeLayout(false);

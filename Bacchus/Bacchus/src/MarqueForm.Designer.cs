@@ -137,6 +137,7 @@
             this.MaximumSize = new System.Drawing.Size(473, 221);
             this.MinimumSize = new System.Drawing.Size(473, 221);
             this.Name = "MarqueForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Créer ou modifier une famille";
             this.flowLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);

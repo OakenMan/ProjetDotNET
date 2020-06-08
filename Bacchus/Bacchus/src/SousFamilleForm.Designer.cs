@@ -35,9 +35,9 @@
             this.label4 = new System.Windows.Forms.Label();
             this.RefTextBox = new System.Windows.Forms.TextBox();
             this.NameTextBox = new System.Windows.Forms.TextBox();
+            this.FamilleComboBox = new System.Windows.Forms.ComboBox();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.ConfirmButton = new System.Windows.Forms.Button();
-            this.FamilleComboBox = new System.Windows.Forms.ComboBox();
             this.flowLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
@@ -123,6 +123,16 @@
             this.NameTextBox.TabIndex = 7;
             this.NameTextBox.TextChanged += new System.EventHandler(this.NameTextBox_TextChanged);
             // 
+            // FamilleComboBox
+            // 
+            this.FamilleComboBox.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.FamilleComboBox.FormattingEnabled = true;
+            this.FamilleComboBox.Location = new System.Drawing.Point(118, 19);
+            this.FamilleComboBox.Name = "FamilleComboBox";
+            this.FamilleComboBox.Size = new System.Drawing.Size(300, 24);
+            this.FamilleComboBox.TabIndex = 8;
+            this.FamilleComboBox.SelectedIndexChanged += new System.EventHandler(this.FamilleComboBox_SelectedIndexChanged);
+            // 
             // flowLayoutPanel2
             // 
             this.flowLayoutPanel2.Controls.Add(this.ConfirmButton);
@@ -143,15 +153,6 @@
             this.ConfirmButton.UseVisualStyleBackColor = true;
             this.ConfirmButton.Click += new System.EventHandler(this.ConfirmButton_Click);
             // 
-            // FamilleComboBox
-            // 
-            this.FamilleComboBox.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.FamilleComboBox.FormattingEnabled = true;
-            this.FamilleComboBox.Location = new System.Drawing.Point(118, 19);
-            this.FamilleComboBox.Name = "FamilleComboBox";
-            this.FamilleComboBox.Size = new System.Drawing.Size(300, 24);
-            this.FamilleComboBox.TabIndex = 8;
-            // 
             // SousFamilleForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -162,6 +163,7 @@
             this.MaximumSize = new System.Drawing.Size(473, 312);
             this.MinimumSize = new System.Drawing.Size(473, 312);
             this.Name = "SousFamilleForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Créer ou modifier une sous-famille";
             this.flowLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);

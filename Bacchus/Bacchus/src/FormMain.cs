@@ -35,12 +35,13 @@ namespace Bacchus
         /********** MÉTHODES **********/
 
         /// <summary>
-        /// Actualise l'affichage de l'application (TreeView et ListView)
+        /// Actualise l'affichage de l'application (TreeView et ListView).
         /// </summary>
         private void RefreshDisplay()
         {
             RefreshTreeView();
             RefreshListView();
+            RefreshStatusStrip();
         }
 
         /// <summary>
@@ -84,7 +85,7 @@ namespace Bacchus
         }
 
         /// <summary>
-        /// Actualise le contenu de la ListView
+        /// Actualise le contenu de la ListView.
         /// </summary>
         private void RefreshListView()
         {
@@ -196,79 +197,211 @@ namespace Bacchus
         }
 
         /// <summary>
-        /// Ouvre le menu de création/modification d'élément (Article, Marque, Famille ou Sous-Famille)
+        /// Actualise le contenu de la StatusStrip.
+        /// </summary>
+        private void RefreshStatusStrip()
+        {
+            DAOArticle daoArticle = new DAOArticle();
+            DAOFamille daoFamille = new DAOFamille();
+            DAOSousFamille daoSousFamille = new DAOSousFamille();
+            DAOMarque daoMarque = new DAOMarque();
+
+            // ### TODO : créer des méthodes "GetCount" dans le DAO, elles seront plus rapides
+            int NombreArticles = daoArticle.GetAllArticles().Count;
+            int NombreFamilles = daoFamille.GetAllFamilles().Count;
+            int NombreMarques = daoMarque.GetAllMarques().Count;
+
+            StripStatusLabel.Text = NombreArticles + " articles répartis en " + NombreFamilles + " familles / " + NombreMarques + " marques";
+        }
+
+        /// <summary>
+        /// Ouvre le menu de création/modification d'élément (Article, Marque, Famille ou Sous-Famille).
         /// </summary>
         private void OpenCreateModifyMenu()
         {
             Form Form = null;
 
-            TreeNode Node = TreeView.SelectedNode;
+            bool Create = true;
+            string SelectedItem = "";
+
+            // Si un élément de la ListView est sélectionné, alors on cherche à le modifier
+            if(ListView.SelectedItems.Count != 0)
+            {
+                Create = false;
+                SelectedItem = ListView.SelectedItems[0].Text;
+            }
 
             // On veut créer/modifier un article
-            if (Node.Text == "Tous les articles")
+            if (ListViewDisplay == "ARTICLES")
             {
-                if (ListView.SelectedItems.Count == 0)
+                if (Create)
                 {
                     Form = new ArticleForm();
                 }
                 else
                 {
-                    Form = new ArticleForm(ListView.SelectedItems[0].Text);
+                    Form = new ArticleForm(SelectedItem);
                 }
             }
             // On veut créer/modifier une famille
-            else if(Node.Text == "Familles")
+            else if(ListViewDisplay == "FAMILLES")
             {
-                if (ListView.SelectedItems.Count == 0)
+                if (Create)
                 {
                     Form = new FamilleForm();
                 }
                 else
                 {
-                    Form = new FamilleForm(ListView.SelectedItems[0].Text);
+                    Form = new FamilleForm(SelectedItem);
                 }
             }
             // On veut créer/modifier une marque
-            else if (Node.Text == "Marques")
+            else if (ListViewDisplay == "MARQUES")
             {
-                if (ListView.SelectedItems.Count == 0)
+                if (Create)
                 {
                     Form = new MarqueForm();
                 }
                 else
                 {
-                    Form = new MarqueForm(ListView.SelectedItems[0].Text);
+                    Form = new MarqueForm(SelectedItem);
                 }
             }
             // On veut créer/modifier une sous-famille
-            else if (Node.Parent.Text == "Familles")
+            else if (ListViewDisplay == "SOUSFAMILLES")
             {
-                if (ListView.SelectedItems.Count == 0)
+                if (Create)
                 {
                     Form = new SousFamilleForm();
                 }
                 else
                 {
-                    Form = new SousFamilleForm(Node.Text, ListView.SelectedItems[0].Text);
-                }
-            }
-            // On veut créer/modifier un article
-            else
-            {
-                if (ListView.SelectedItems.Count == 0)
-                {
-                    Form = new ArticleForm();
-                }
-                else
-                {
-                    Form = new ArticleForm(ListView.SelectedItems[0].Text);
+                    Form = new SousFamilleForm(ListViewValue2, SelectedItem);
                 }
             }
 
-            if(Form != null)
+            // Affiche la fenêtre si on en a créé une
+            if (Form != null)
             {
-                // Affiche la fenêtre
-                Form.Show();
+                Form.ShowDialog();
+                RefreshDisplay();
+            }
+        }
+
+        /// <summary>
+        /// Ouvre un MessageBox affichant un message relatif à la suppression d'un élément (article, marque, famille...).
+        /// En fonction de l'action de l'utilisateur, supprime on non l'élément.
+        /// </summary>
+        private void OpenDeleteMenu()
+        {
+            string Message = "Default Message";                     // Message affiché dans la TextBox
+            MessageBoxButtons Buttons = MessageBoxButtons.YesNo;    // Boutons de la TextBox
+
+            // Si aucun élément n'est sélectionné, on s'arrête là
+            if(ListView.SelectedItems.Count == 0)
+            {
+                return;
+            }
+
+            string SelectedItem = ListView.SelectedItems[0].Text;   // Element selectionné dans la ListView
+
+            /* CHOIX DU MESSAGE ET DES BOUTONS A AFFICHER */
+            // On veut supprimer un article
+            if (ListViewDisplay == "ARTICLES")
+            {
+                Message = "Êtes vous sur de supprimer l'article [" + SelectedItem + "] ? \n" +
+                    "Cette action est irréversible.";
+            }
+            // On veut supprimer une famille
+            else if (ListViewDisplay == "FAMILLES")
+            {
+                DAOArticle daoArticle = new DAOArticle();
+                List<Article> ListeArticles = daoArticle.GetAllArticles();
+                bool Found = false;
+                for(int Index = 0; Index < ListeArticles.Count && !Found; Index++)
+                {
+                    if(ListeArticles[Index].Famille == SelectedItem)
+                    {
+                        Found = true;
+                    }
+                }
+                if(Found)
+                {
+                    Message = "Êtes vous sur de supprimer la famille [" + SelectedItem + "] ? \n" +
+                     "Toutes les sous-familles seront supprimées. Cette action est irréversible.";
+                }
+                else
+                {
+                    Message = "La famille [" + SelectedItem + "] est déjà assignée à plusieurs articles." +
+                        "Si vous voulez vraiment supprimer cette famille, modifiez ou supprimez ces articles au préalable.";
+                    Buttons = MessageBoxButtons.OK;
+                }
+            }
+            // On veut supprimer une marque
+            else if (ListViewDisplay == "MARQUES")
+            {
+                DAOArticle daoArticle = new DAOArticle();
+                List<Article> ListeArticles = daoArticle.GetArticlesWhereMarque(SelectedItem);
+                if (ListeArticles.Count == 0)
+                {
+                    Message = "Êtes vous sur de supprimer la marque [" + SelectedItem + "] ? \n" +
+                    "Cette action est irréversible.";
+                }
+                else
+                {
+                    Message = "La marque [" + SelectedItem + "] est déjà assignée à plusieurs articles." +
+                        "Si vous voulez vraiment supprimer cette marque, modifiez ou supprimez ces articles au préalable.";
+                    Buttons = MessageBoxButtons.OK;
+                }
+            }
+            // On veut supprimer une sous-familles
+            else if (ListViewDisplay == "SOUSFAMILLES")
+            {
+                DAOArticle daoArticle = new DAOArticle();
+                List<Article> ListeArticles = daoArticle.GetArticlesWhereSousFamille(ListViewValue2, SelectedItem);
+                if(ListeArticles.Count == 0)
+                {
+                    Message = "Êtes vous sur de supprimer la sous-famille [" + SelectedItem + "] ? \n" +
+                    "Cette action est irréversible.";
+                }
+                else
+                {
+                    Message = "La sous-famille [" + SelectedItem + "] est déjà assignée à plusieurs articles." +
+                        "Si vous voulez vraiment supprimer cette sous-famille, modifiez ou supprimez ces articles au préalable.";
+                    Buttons = MessageBoxButtons.OK;
+                }
+            }
+
+            // Si l'utiliseur choisit "Oui" ---> On supprime l'élément
+            if (MessageBox.Show(Message, "Attention", Buttons) == DialogResult.Yes)
+            {
+                if(ListViewDisplay == "ARTICLES")
+                {
+                    DAOArticle daoArticle = new DAOArticle();
+                    daoArticle.DeleteArticle(SelectedItem);
+                }
+                else if(ListViewDisplay == "MARQUES")
+                {
+                    DAOMarque daoMarque = new DAOMarque();
+                    int RefMarque = daoMarque.GetRefMarque(SelectedItem);
+                    daoMarque.DeleteMarque(RefMarque);
+                }
+                else if(ListViewDisplay == "FAMILLES")
+                {
+                    DAOFamille daoFamille = new DAOFamille();
+                    int RefFamille = daoFamille.GetRefFamille(SelectedItem);
+                    daoFamille.DeleteFamille(RefFamille);
+                }
+                else if(ListViewDisplay == "SOUSFAMILLES")
+                {
+                    DAOFamille daoFamille = new DAOFamille();
+                    DAOSousFamille daoSousFamille = new DAOSousFamille();
+                    int RefFamille = daoFamille.GetRefFamille(SelectedItem);
+                    int RefSousFamille = daoSousFamille.GetRefSousFamille(RefFamille, SelectedItem);
+                    daoSousFamille.DeleteSousFamille(RefSousFamille);
+                }
+                // On actualise l'affichage
+                RefreshDisplay();
             }
         }
 
@@ -340,7 +473,7 @@ namespace Bacchus
                     break;
                 // Touche "Suppr" ---> Ouverture d'un pop-up de confirmation de suppression
                 case Keys.Delete:
-                    Console.WriteLine("Suppr");
+                    OpenDeleteMenu();
                     break;
                 // Touche "F5" ---> Actualise l'affichage de la TreeView et de la ListView
                 case Keys.F5:
@@ -430,7 +563,8 @@ namespace Bacchus
         private void importerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ImportForm Form = new ImportForm();
-            Form.Show();
+            Form.ShowDialog();
+            RefreshDisplay();
         }
 
         /// <summary>
@@ -442,7 +576,8 @@ namespace Bacchus
         private void exporterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ExportForm Form = new ExportForm();
-            Form.Show();
+            Form.ShowDialog();
+            RefreshDisplay();
         }
 
         /// <summary>

@@ -74,7 +74,7 @@
             this.MaximumSize = new System.Drawing.Size(580, 150);
             this.MinimumSize = new System.Drawing.Size(580, 150);
             this.Name = "ExportForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Exporter un fichier CSV";
             this.flowLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);

@@ -31,6 +31,7 @@ namespace Bacchus
             {
                 FamilleComboBox.Items.Add(Nom);
             }
+            FamilleComboBox.SelectedIndex = 0;
 
             // Si on veut créer une nouvelle famille
             if (SousFamille == "")
@@ -38,14 +39,12 @@ namespace Bacchus
                 Text = "Créer une nouvelle sous-famille";
                 ConfirmButton.Text = "Ajouter la sous-famille";
                 RefTextBox.Text = "Réference générée automatiquement";
-                ConfirmButton.Enabled = false;
             }
             // Si on veut modifier une sous-famille existante
             else
             {
                 Text = "Modifier la sous-famille [" + SousFamille + "]";
                 ConfirmButton.Text = "Modifier la sous-famille";
-                ConfirmButton.Enabled = true;
                 FamilleComboBox.Enabled = false;
 
                 FamilleComboBox.SelectedIndex = FamilleComboBox.FindString(Famille);
@@ -53,6 +52,8 @@ namespace Bacchus
                 RefTextBox.Text = daoSousFamille.GetRefSousFamille(daoFamille.GetRefFamille(Famille), SousFamille).ToString();
                 NameTextBox.Text = SousFamille;
             }
+
+            UpdateConfirmButton();
         }
 
         private void ConfirmButton_Click(object sender, EventArgs e)
@@ -77,14 +78,24 @@ namespace Bacchus
 
         private void NameTextBox_TextChanged(object sender, EventArgs e)
         {
-            if(NameTextBox.Text == "")
-            {
-                ConfirmButton.Enabled = false;
-            }
-            else
+            UpdateConfirmButton();
+        }
+
+        private void UpdateConfirmButton()
+        {
+            if(NameTextBox.Text != "" && FamilleComboBox.SelectedIndex != -1)
             {
                 ConfirmButton.Enabled = true;
             }
+            else
+            {
+                ConfirmButton.Enabled = false;
+            }
+        }
+
+        private void FamilleComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateConfirmButton();
         }
     }
 }

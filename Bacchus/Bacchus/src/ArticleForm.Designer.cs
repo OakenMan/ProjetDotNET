@@ -187,7 +187,7 @@
             // 
             this.MarqueComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.MarqueComboBox.FormattingEnabled = true;
-            this.MarqueComboBox.Location = new System.Drawing.Point(3, 204);
+            this.MarqueComboBox.Location = new System.Drawing.Point(3, 203);
             this.MarqueComboBox.Name = "MarqueComboBox";
             this.MarqueComboBox.Size = new System.Drawing.Size(300, 24);
             this.MarqueComboBox.TabIndex = 5;
@@ -196,7 +196,7 @@
             // 
             this.SousFamilleComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.SousFamilleComboBox.FormattingEnabled = true;
-            this.SousFamilleComboBox.Location = new System.Drawing.Point(3, 156);
+            this.SousFamilleComboBox.Location = new System.Drawing.Point(3, 155);
             this.SousFamilleComboBox.Name = "SousFamilleComboBox";
             this.SousFamilleComboBox.Size = new System.Drawing.Size(300, 24);
             this.SousFamilleComboBox.TabIndex = 4;
@@ -213,7 +213,7 @@
             // 
             this.FamilleComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.FamilleComboBox.FormattingEnabled = true;
-            this.FamilleComboBox.Location = new System.Drawing.Point(3, 108);
+            this.FamilleComboBox.Location = new System.Drawing.Point(3, 107);
             this.FamilleComboBox.Name = "FamilleComboBox";
             this.FamilleComboBox.Size = new System.Drawing.Size(300, 24);
             this.FamilleComboBox.TabIndex = 0;
@@ -279,7 +279,7 @@
             this.MaximumSize = new System.Drawing.Size(472, 443);
             this.MinimumSize = new System.Drawing.Size(472, 443);
             this.Name = "ArticleForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Ajouter / Modifier un article";
             this.flowLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);

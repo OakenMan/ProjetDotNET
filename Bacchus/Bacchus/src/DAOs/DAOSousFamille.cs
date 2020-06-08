@@ -106,5 +106,13 @@ namespace Bacchus.src.DAOs
             }
         }
 
+        public int DeleteSousFamille(int RefSousFamille)
+        {
+            string Cmd = "DELETE FROM SousFamilles WHERE RefSousFamille = " + RefSousFamille;
+            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
+
+            return Command.ExecuteNonQuery();
+        }
+
     }
 }

@@ -103,6 +103,7 @@ namespace Bacchus.src.DAOs
         public int DeleteMarque(int RefMarque)
         {
             string Cmd = "DELETE FROM Marques WHERE RefMarque = " + RefMarque;
+
             using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
             {
                 Connection.Open();

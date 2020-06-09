@@ -254,7 +254,6 @@
             this.PrixTextBox.Size = new System.Drawing.Size(226, 20);
             this.PrixTextBox.TabIndex = 3;
             this.PrixTextBox.TextChanged += new System.EventHandler(this.PrixTextBox_TextChanged);
-
             // 
             // QuantiteNumericUpDown
             // 

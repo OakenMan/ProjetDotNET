@@ -56,7 +56,7 @@ namespace Bacchus
             // Si on veut modifier une marque existante
             else
             {
-                //daoMarque.UpdateMarque(daoMarque.GetRefMarque(Marque), NameTextBox.Text);
+                daoMarque.UpdateMarque(daoMarque.GetRefMarque(Marque), NameTextBox.Text);
                 Close();
             }
         }

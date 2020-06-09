@@ -60,8 +60,7 @@ namespace Bacchus.src.DAOs
                         }
                         else
                         {
-                            Console.WriteLine("La famille [{0}] n'existe pas, on l'ajoute", NomFamille);
-                            return AddFamille(NomFamille);
+                            return -1;
                         }
                     }
                 }
@@ -175,6 +174,22 @@ namespace Bacchus.src.DAOs
                 }
                 // Supprime la famille
                 Cmd = "DELETE FROM Familles WHERE RefFamille = " + RefFamille;
+                using (SQLiteCommand Command = new SQLiteCommand(Cmd, Connection))
+                {
+                    return Command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public int UpdateFamille(int RefFamille, string Nom)
+        {
+            string Cmd = "UPDATE Familles " +
+                        "SET Nom = '" + Nom + "' " +
+                        "WHERE RefFamille = " + RefFamille;
+
+            using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
+            {
+                Connection.Open();
                 using (SQLiteCommand Command = new SQLiteCommand(Cmd, Connection))
                 {
                     return Command.ExecuteNonQuery();

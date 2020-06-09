@@ -48,7 +48,7 @@ namespace Bacchus.src.DAOs
         public int GetRefSousFamille(int RefFamille, string NomSousFamille)
         {
             string Cmd = "SELECT RefSousFamille FROM SousFamilles WHERE RefFamille = " + RefFamille + " AND Nom = '" + NomSousFamille + "'";
-
+            Console.WriteLine(Cmd);
             using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
             {
                 Connection.Open();
@@ -62,8 +62,7 @@ namespace Bacchus.src.DAOs
                         }
                         else
                         {
-                            Console.WriteLine("La sous-famille [{0}] n'existe pas, on l'ajoute", NomSousFamille);
-                            return AddSousFamille(RefFamille, NomSousFamille);
+                            return -1;
                         }
                     }
                 }
@@ -140,6 +139,22 @@ namespace Bacchus.src.DAOs
         public int DeleteSousFamille(int RefSousFamille)
         {
             string Cmd = "DELETE FROM SousFamilles WHERE RefSousFamille = " + RefSousFamille;
+
+            using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
+            {
+                Connection.Open();
+                using (SQLiteCommand Command = new SQLiteCommand(Cmd, Connection))
+                {
+                    return Command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public int UpdateSousFamille(int RefSousFamille, string Nom)
+        {
+            string Cmd = "UPDATE SousFamilles " +
+                        "SET Nom = '" + Nom + "' " +
+                        "WHERE RefSousFamille = " + RefSousFamille;
 
             using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
             {

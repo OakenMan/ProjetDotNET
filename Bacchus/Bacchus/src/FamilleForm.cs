@@ -56,7 +56,7 @@ namespace Bacchus
             // Si on veut modifier une famille existante
             else
             {
-                //daoFamille.UpdateFamille(daoFamille.GetRefFamille(Famille), NameTextBox.Text);
+                daoFamille.UpdateFamille(daoFamille.GetRefFamille(Famille), NameTextBox.Text);
                 Close();
             }
         }

@@ -21,23 +21,19 @@ namespace Bacchus.src.DAOs
 
             using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
             {
-                Console.WriteLine("On est connecté à la DB");
                 Connection.Open();
                 using (SQLiteCommand Command = new SQLiteCommand(Cmd, Connection))
                 {
-                    Console.WriteLine("La commande est créer");
                     using (SQLiteDataReader Reader = Command.ExecuteReader())
                     {
                         // Si l'article existe déjà, on le met à jour
                         if (Reader.Read())
                         {
-                            Console.WriteLine("L'article {0} existe déjà, on le met à jour", article.RefArticle);
                             Update = true; 
                         }
                         //Si l'article n'existe pas dans la BDD, on l'ajoute
                         else
                         {
-                            Console.WriteLine("Ajout de l'article {0}", article.RefArticle);
                             Update = false;
                         }
                     }
@@ -66,8 +62,22 @@ namespace Bacchus.src.DAOs
             DAOSousFamille daoSousFamille = new DAOSousFamille();
 
             int RefMarque = daoMarque.GetRefMarque(article.Marque);
+            if(RefMarque == -1)
+            {
+                RefMarque = daoMarque.AddMarque(article.Marque);
+            }
+
             int RefFamille = daoFamille.GetRefFamille(article.Famille);
+            if(RefFamille == -1)
+            {
+                RefFamille = daoFamille.AddFamille(article.Famille);
+            }
+
             int RefSousFamille = daoSousFamille.GetRefSousFamille(RefFamille, article.SousFamille);
+            if(RefSousFamille == -1)
+            {
+                RefSousFamille = daoSousFamille.AddSousFamille(RefFamille, article.SousFamille);
+            }
 
             string Cmd = "INSERT INTO Articles (RefArticle, Description, RefSousFamille, RefMarque, PrixHT, Quantite) " +
                 "VALUES(@RefArticle, @Description, @RefSousFamille, @RefMarque, @PrixHT, @Quantite);";
@@ -111,8 +121,8 @@ namespace Bacchus.src.DAOs
             int RefSousFamille = daoSousFamille.GetRefSousFamille(RefFamille, ArticleUpdated.SousFamille);
 
             string Cmd = "UPDATE Articles " +
-                        "SET Description = '@Description', RefSousFamille = @RefSousFamille, RefMarque = @RefMarque, PrixHT = @PrixHT, Quantite = @Quantite " +
-                        "WHERE RefArticle = '@RefArticle';";
+                        "SET Description = @Description, RefSousFamille = @RefSousFamille, RefMarque = @RefMarque, PrixHT = @PrixHT, Quantite = @Quantite " +
+                        "WHERE RefArticle = @RefArticle;";
 
             using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
             {

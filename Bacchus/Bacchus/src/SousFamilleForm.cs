@@ -23,6 +23,8 @@ namespace Bacchus
             this.Famille = Famille;
             this.SousFamille = SousFamille;
 
+            Console.WriteLine("famille=" + Famille + ", sousfamille=" + SousFamille);
+
             // On remplit la combo box
             DAOFamille daoFamille = new DAOFamille();
             DAOSousFamille daoSousFamille = new DAOSousFamille();
@@ -71,7 +73,8 @@ namespace Bacchus
             // Si on veut modifier une sous-famille existante
             else
             {
-                //daoSousFamille.UpdateSousFamille(daoSousFamille.GetRefSousFamille(SousFamille), NameTextBox.Text);
+                int RefFamille = daoFamille.GetRefFamille(FamilleComboBox.Items[FamilleComboBox.SelectedIndex].ToString());
+                daoSousFamille.UpdateSousFamille(daoSousFamille.GetRefSousFamille(RefFamille, SousFamille), NameTextBox.Text);
                 Close();
             }
         }

@@ -276,7 +276,7 @@ namespace Bacchus
                 }
                 else
                 {
-                    Form = new SousFamilleForm(ListViewValue2, SelectedItem);
+                    Form = new SousFamilleForm(ListViewValue, SelectedItem);
                 }
             }
 
@@ -358,7 +358,7 @@ namespace Bacchus
             else if (ListViewDisplay == "SOUSFAMILLES")
             {
                 DAOArticle daoArticle = new DAOArticle();
-                List<Article> ListeArticles = daoArticle.GetArticlesWhereSousFamille(ListViewValue2, SelectedItem);
+                List<Article> ListeArticles = daoArticle.GetArticlesWhereSousFamille(ListViewValue, SelectedItem);
                 if(ListeArticles.Count == 0)
                 {
                     Message = "Êtes vous sur de supprimer la sous-famille [" + SelectedItem + "] ? \n" +
@@ -396,7 +396,7 @@ namespace Bacchus
                 {
                     DAOFamille daoFamille = new DAOFamille();
                     DAOSousFamille daoSousFamille = new DAOSousFamille();
-                    int RefFamille = daoFamille.GetRefFamille(SelectedItem);
+                    int RefFamille = daoFamille.GetRefFamille(ListViewValue);
                     int RefSousFamille = daoSousFamille.GetRefSousFamille(RefFamille, SelectedItem);
                     daoSousFamille.DeleteSousFamille(RefSousFamille);
                 }

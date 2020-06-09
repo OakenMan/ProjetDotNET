@@ -31,10 +31,13 @@ namespace Bacchus
 
             ConfirmButton.Enabled = false;
 
+            article = new Article();
+
             if(RefArticle == "")
             {
                 Text = "Créer un nouvel article";
                 ConfirmButton.Text = "Ajouter l'article";
+                RefTextBox.ReadOnly = false;
                 Mode = ModeEnum.Add;
             }
             else
@@ -140,7 +143,6 @@ namespace Bacchus
         {
             for (uint i = 0; i < Items.Count; i++)
             {
-                Console.WriteLine("On compare {0} et {1}", Item, Items[(int)i].ToString());
                 if (string.Compare(Item, Items[(int)i].ToString()) == 0)
                 {
                     return (int)i;
@@ -166,7 +168,8 @@ namespace Bacchus
             DAOMarque daoMarque = new DAOMarque();
 
             //Si oui :
-                //Création de l'objet Article à partir des informations contenues dans les champs précédants
+            //Création de l'objet Article à partir des informations contenues dans les champs précédants
+            article.RefArticle = RefTextBox.Text;
             article.Description = DescTextBox.Text;
 
             article.Famille = FamilleComboBox.SelectedItem.ToString();
@@ -185,6 +188,7 @@ namespace Bacchus
             daoArticle.AddOrUpdateArticle(article);
             //Si non:
             //Affichage message d'erreur
+            Close();
         }
 
         /// <summary>
@@ -200,25 +204,21 @@ namespace Bacchus
         {
             if (string.Compare(DescTextBox.Text, "") == 0)
             {
-                Console.WriteLine("DescTextBox pas valide");
                 return false;
             }
 
             if (FamilleComboBox.SelectedItem == null)
             {
-                Console.WriteLine("FamilleComboBox pas valide");
                 return false;
             }
 
             if (SousFamilleComboBox.SelectedItem == null)
             {
-                Console.WriteLine("SousFamilleComboBox pas valide");
                 return false;
             }
 
             if (MarqueComboBox.SelectedItem == null)
             {
-                Console.WriteLine("MarqueComboBox pas valide");
                 return false;
             }
 
@@ -229,7 +229,6 @@ namespace Bacchus
 
             catch (Exception)
             {
-                Console.WriteLine("PrixTextBox pas valide");
                 return false;
             }
 
@@ -240,7 +239,6 @@ namespace Bacchus
         {
             if (AreFieldsValid())
             {
-                Console.WriteLine("Fields are valid !");
                 ConfirmButton.Enabled = true;
             }
             else

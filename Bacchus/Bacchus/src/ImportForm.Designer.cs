@@ -43,9 +43,9 @@
             // 
             // ProgressBar
             // 
-            this.ProgressBar.Location = new System.Drawing.Point(3, 76);
+            this.ProgressBar.Location = new System.Drawing.Point(6, 32);
             this.ProgressBar.Name = "ProgressBar";
-            this.ProgressBar.Size = new System.Drawing.Size(551, 23);
+            this.ProgressBar.Size = new System.Drawing.Size(538, 23);
             this.ProgressBar.Step = 1;
             this.ProgressBar.TabIndex = 0;
             // 
@@ -53,11 +53,10 @@
             // 
             this.flowLayoutPanel1.Controls.Add(this.flowLayoutPanel4);
             this.flowLayoutPanel1.Controls.Add(this.flowLayoutPanel3);
-            this.flowLayoutPanel1.Controls.Add(this.ProgressBar);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(0, 0, 5, 0);
             this.flowLayoutPanel1.Size = new System.Drawing.Size(562, 103);
             this.flowLayoutPanel1.TabIndex = 1;
             // 
@@ -67,14 +66,15 @@
             this.flowLayoutPanel4.Controls.Add(this.FileTextBox);
             this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
+            this.flowLayoutPanel4.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
             this.flowLayoutPanel4.Size = new System.Drawing.Size(556, 29);
             this.flowLayoutPanel4.TabIndex = 7;
             // 
             // OpenFileButton
             // 
-            this.OpenFileButton.Location = new System.Drawing.Point(3, 3);
+            this.OpenFileButton.Location = new System.Drawing.Point(6, 3);
             this.OpenFileButton.Name = "OpenFileButton";
-            this.OpenFileButton.Size = new System.Drawing.Size(137, 23);
+            this.OpenFileButton.Size = new System.Drawing.Size(130, 25);
             this.OpenFileButton.TabIndex = 1;
             this.OpenFileButton.Text = "Ouvrir";
             this.OpenFileButton.UseVisualStyleBackColor = true;
@@ -82,24 +82,26 @@
             // 
             // FileTextBox
             // 
-            this.FileTextBox.Location = new System.Drawing.Point(146, 3);
+            this.FileTextBox.Location = new System.Drawing.Point(142, 3);
             this.FileTextBox.Name = "FileTextBox";
-            this.FileTextBox.Size = new System.Drawing.Size(405, 22);
+            this.FileTextBox.Size = new System.Drawing.Size(402, 22);
             this.FileTextBox.TabIndex = 2;
             // 
             // flowLayoutPanel3
             // 
             this.flowLayoutPanel3.Controls.Add(this.OverwriteDataButton);
             this.flowLayoutPanel3.Controls.Add(this.AppendDataButton);
+            this.flowLayoutPanel3.Controls.Add(this.ProgressBar);
             this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 38);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(556, 32);
+            this.flowLayoutPanel3.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(556, 65);
             this.flowLayoutPanel3.TabIndex = 6;
             // 
             // OverwriteDataButton
             // 
             this.OverwriteDataButton.Enabled = false;
-            this.OverwriteDataButton.Location = new System.Drawing.Point(3, 3);
+            this.OverwriteDataButton.Location = new System.Drawing.Point(6, 3);
             this.OverwriteDataButton.Name = "OverwriteDataButton";
             this.OverwriteDataButton.Size = new System.Drawing.Size(266, 23);
             this.OverwriteDataButton.TabIndex = 3;
@@ -109,9 +111,9 @@
             // AppendDataButton
             // 
             this.AppendDataButton.Enabled = false;
-            this.AppendDataButton.Location = new System.Drawing.Point(275, 3);
+            this.AppendDataButton.Location = new System.Drawing.Point(278, 3);
             this.AppendDataButton.Name = "AppendDataButton";
-            this.AppendDataButton.Size = new System.Drawing.Size(276, 23);
+            this.AppendDataButton.Size = new System.Drawing.Size(266, 23);
             this.AppendDataButton.TabIndex = 4;
             this.AppendDataButton.Text = "Ajouter les données";
             this.AppendDataButton.UseVisualStyleBackColor = true;

@@ -31,8 +31,7 @@ namespace Bacchus.src.DAOs
                         }
                         else
                         {
-                            Console.WriteLine("La marque [{0}] n'existe pas, on l'ajoute", NomMarque);
-                            return AddMarque(NomMarque);
+                            return -1;
                         }
                     }
                 }
@@ -103,6 +102,22 @@ namespace Bacchus.src.DAOs
         public int DeleteMarque(int RefMarque)
         {
             string Cmd = "DELETE FROM Marques WHERE RefMarque = " + RefMarque;
+
+            using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
+            {
+                Connection.Open();
+                using (SQLiteCommand Command = new SQLiteCommand(Cmd, Connection))
+                {
+                    return Command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public int UpdateMarque(int RefMarque, string Nom)
+        {
+            string Cmd = "UPDATE Marques " +
+                        "SET Nom = '" + Nom + "' " +
+                        "WHERE RefMarque = " + RefMarque;
 
             using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
             {

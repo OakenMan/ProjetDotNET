@@ -46,10 +46,8 @@
             this.ProgressBar.Location = new System.Drawing.Point(3, 76);
             this.ProgressBar.Name = "ProgressBar";
             this.ProgressBar.Size = new System.Drawing.Size(551, 23);
-            this.ProgressBar.TabIndex = 0;
-            this.ProgressBar.Minimum = 0;
-            this.ProgressBar.Value = 0;
             this.ProgressBar.Step = 1;
+            this.ProgressBar.TabIndex = 0;
             // 
             // flowLayoutPanel1
             // 
@@ -100,16 +98,17 @@
             // 
             // OverwriteDataButton
             // 
+            this.OverwriteDataButton.Enabled = false;
             this.OverwriteDataButton.Location = new System.Drawing.Point(3, 3);
             this.OverwriteDataButton.Name = "OverwriteDataButton";
             this.OverwriteDataButton.Size = new System.Drawing.Size(266, 23);
             this.OverwriteDataButton.TabIndex = 3;
             this.OverwriteDataButton.Text = "Écraser les données";
             this.OverwriteDataButton.Click += new System.EventHandler(this.OverwriteDataButton_Click);
-            this.OverwriteDataButton.Enabled = false;
             // 
             // AppendDataButton
             // 
+            this.AppendDataButton.Enabled = false;
             this.AppendDataButton.Location = new System.Drawing.Point(275, 3);
             this.AppendDataButton.Name = "AppendDataButton";
             this.AppendDataButton.Size = new System.Drawing.Size(276, 23);
@@ -117,7 +116,6 @@
             this.AppendDataButton.Text = "Ajouter les données";
             this.AppendDataButton.UseVisualStyleBackColor = true;
             this.AppendDataButton.Click += new System.EventHandler(this.AppendDataButton_Click);
-            this.AppendDataButton.Enabled = false;
             // 
             // ImportForm
             // 
@@ -128,6 +126,7 @@
             this.MaximumSize = new System.Drawing.Size(580, 150);
             this.MinimumSize = new System.Drawing.Size(580, 150);
             this.Name = "ImportForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Importer un fichier SQL";
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel4.ResumeLayout(false);

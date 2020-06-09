@@ -30,9 +30,9 @@ namespace Bacchus
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Tous les articles");
-            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Familles");
-            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Marques");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Tous les articles");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Familles");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Marques");
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fichierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.actualiserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -123,16 +123,16 @@ namespace Bacchus
             this.TreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TreeView.Location = new System.Drawing.Point(0, 0);
             this.TreeView.Name = "TreeView";
-            treeNode7.Name = "NoeudTousArticles";
-            treeNode7.Text = "Tous les articles";
-            treeNode8.Name = "NoeudFamilles";
-            treeNode8.Text = "Familles";
-            treeNode9.Name = "NoeudMarque";
-            treeNode9.Text = "Marques";
+            treeNode1.Name = "NoeudTousArticles";
+            treeNode1.Text = "Tous les articles";
+            treeNode2.Name = "NoeudFamilles";
+            treeNode2.Text = "Familles";
+            treeNode3.Name = "NoeudMarque";
+            treeNode3.Text = "Marques";
             this.TreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode7,
-            treeNode8,
-            treeNode9});
+            treeNode1,
+            treeNode2,
+            treeNode3});
             this.TreeView.Size = new System.Drawing.Size(215, 623);
             this.TreeView.TabIndex = 0;
             this.TreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeView_NodeMouseClick);
@@ -147,6 +147,7 @@ namespace Bacchus
             this.ListView.TabIndex = 0;
             this.ListView.UseCompatibleStateImageBehavior = false;
             this.ListView.View = System.Windows.Forms.View.Details;
+            this.ListView.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.ListView_ColumnClick);
             // 
             // FormMain
             // 

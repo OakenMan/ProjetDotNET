@@ -2,17 +2,12 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Bacchus.src.DAOs
 {
-    class DAOArticle : DAO
+    class DAOArticle
     {
-        public DAOArticle() : base()
-        {
-        }
+        protected const string DatabasePath = "Data Source = Bacchus.SQLite;";
 
         /// <summary>
         /// Ajoute le nouvel article à la BDD. 
@@ -22,21 +17,29 @@ namespace Bacchus.src.DAOs
         public void AddOrUpdateArticle(Article article)
         {
             string Cmd = "SELECT * FROM Articles WHERE RefArticle = '" + article.RefArticle + "'";
-            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
 
-            using (SQLiteDataReader Reader = Command.ExecuteReader())
+            using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
             {
-                // Si l'article existe déjà, on le met à jour
-                if (Reader.Read())
+                Console.WriteLine("On est connecté à la DB");
+                Connection.Open();
+                using (SQLiteCommand Command = new SQLiteCommand(Cmd, Connection))
                 {
-                    Console.WriteLine("L'article {0} existe déjà, on le met à jour", article.RefArticle);
-                    UpdateArticle(article);
-                }
-                // Si l'article n'existe pas dans la BDD, on l'ajoute
-                else
-                {
-                    Console.WriteLine("Ajout de l'article {0}", article.RefArticle);
-                    AddArticle(article);
+                    Console.WriteLine("La commande est créer");
+                    using (SQLiteDataReader Reader = Command.ExecuteReader())
+                    {
+                        // Si l'article existe déjà, on le met à jour
+                        if (Reader.Read())
+                        {
+                            Console.WriteLine("L'article {0} existe déjà, on le met à jour", article.RefArticle);
+                            UpdateArticle(article);
+                        }
+                        //Si l'article n'existe pas dans la BDD, on l'ajoute
+                        else
+                        {
+                            Console.WriteLine("Ajout de l'article {0}", article.RefArticle);
+                            AddArticle(article);
+                        }
+                    }
                 }
             }
         }
@@ -59,23 +62,28 @@ namespace Bacchus.src.DAOs
             string Cmd = "INSERT INTO Articles (RefArticle, Description, RefSousFamille, RefMarque, PrixHT, Quantite) " +
                 "VALUES(@RefArticle, @Description, @RefSousFamille, @RefMarque, @PrixHT, @Quantite);";
 
-            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
+            using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
+            {
+                Connection.Open();
+                using (SQLiteCommand Command = new SQLiteCommand(Cmd, Connection))
+                {
+                    SQLiteParameter RefArticleParam = new SQLiteParameter("@RefArticle", DbType.String) { Value = article.RefArticle };
+                    SQLiteParameter DescriptionParam = new SQLiteParameter("@Description", DbType.String) { Value = article.Description };
+                    SQLiteParameter RefSousFamilleParam = new SQLiteParameter("@RefSousFamille", DbType.Int16) { Value = RefSousFamille };
+                    SQLiteParameter RefMarqueParam = new SQLiteParameter("@RefMarque", DbType.Int16) { Value = RefMarque };
+                    SQLiteParameter PrixHTParam = new SQLiteParameter("@PrixHT", DbType.Decimal) { Value = article.PrixHT };
+                    SQLiteParameter QuantiteParam = new SQLiteParameter("@Quantite", DbType.Int16) { Value = article.Quantite };
 
-            SQLiteParameter RefArticleParam = new SQLiteParameter("@RefArticle", DbType.String) { Value = article.RefArticle };
-            SQLiteParameter DescriptionParam = new SQLiteParameter("@Description", DbType.String) { Value = article.Description };
-            SQLiteParameter RefSousFamilleParam = new SQLiteParameter("@RefSousFamille", DbType.Int16) { Value = RefSousFamille };
-            SQLiteParameter RefMarqueParam = new SQLiteParameter("@RefMarque", DbType.Int16) { Value = RefMarque };
-            SQLiteParameter PrixHTParam = new SQLiteParameter("@PrixHT", DbType.Decimal) { Value = article.PrixHT };
-            SQLiteParameter QuantiteParam = new SQLiteParameter("@Quantite", DbType.Int16) { Value = article.Quantite };
+                    Command.Parameters.Add(RefArticleParam);
+                    Command.Parameters.Add(DescriptionParam);
+                    Command.Parameters.Add(RefSousFamilleParam);
+                    Command.Parameters.Add(RefMarqueParam);
+                    Command.Parameters.Add(PrixHTParam);
+                    Command.Parameters.Add(QuantiteParam);
 
-            Command.Parameters.Add(RefArticleParam);
-            Command.Parameters.Add(DescriptionParam);
-            Command.Parameters.Add(RefSousFamilleParam);
-            Command.Parameters.Add(RefMarqueParam);
-            Command.Parameters.Add(PrixHTParam);
-            Command.Parameters.Add(QuantiteParam);
-
-            return Command.ExecuteNonQuery();
+                    return Command.ExecuteNonQuery();
+                }
+            }
         }
 
         /// <summary>
@@ -96,23 +104,28 @@ namespace Bacchus.src.DAOs
                         "SET Description = '@Description', RefSousFamille = @RefSousFamille, RefMarque = @RefMarque, PrixHT = @PrixHT, Quantite = @Quantite " +
                         "WHERE RefArticle = '@RefArticle';";
 
-            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
+            using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
+            {
+                Connection.Open();
+                using (SQLiteCommand Command = new SQLiteCommand(Cmd, Connection))
+                {
+                    SQLiteParameter RefArticleParam = new SQLiteParameter("@RefArticle", DbType.String) { Value = ArticleUpdated.RefArticle };
+                    SQLiteParameter DescriptionParam = new SQLiteParameter("@Description", DbType.String) { Value = ArticleUpdated.Description };
+                    SQLiteParameter RefSousFamilleParam = new SQLiteParameter("@RefSousFamille", DbType.Int16) { Value = RefSousFamille };
+                    SQLiteParameter RefMarqueParam = new SQLiteParameter("@RefMarque", DbType.Int16) { Value = RefMarque };
+                    SQLiteParameter PrixHTParam = new SQLiteParameter("@PrixHT", DbType.Decimal) { Value = ArticleUpdated.PrixHT };
+                    SQLiteParameter QuantiteParam = new SQLiteParameter("@Quantite", DbType.Int16) { Value = ArticleUpdated.Quantite };
 
-            SQLiteParameter RefArticleParam = new SQLiteParameter("@RefArticle", DbType.String) { Value = ArticleUpdated.RefArticle };
-            SQLiteParameter DescriptionParam = new SQLiteParameter("@Description", DbType.String) { Value = ArticleUpdated.Description };
-            SQLiteParameter RefSousFamilleParam = new SQLiteParameter("@RefSousFamille", DbType.Int16) { Value = RefSousFamille };
-            SQLiteParameter RefMarqueParam = new SQLiteParameter("@RefMarque", DbType.Int16) { Value = RefMarque };
-            SQLiteParameter PrixHTParam = new SQLiteParameter("@PrixHT", DbType.Decimal) { Value = ArticleUpdated.PrixHT };
-            SQLiteParameter QuantiteParam = new SQLiteParameter("@Quantite", DbType.Int16) { Value = ArticleUpdated.Quantite };
+                    Command.Parameters.Add(RefArticleParam);
+                    Command.Parameters.Add(DescriptionParam);
+                    Command.Parameters.Add(RefSousFamilleParam);
+                    Command.Parameters.Add(RefMarqueParam);
+                    Command.Parameters.Add(PrixHTParam);
+                    Command.Parameters.Add(QuantiteParam);
 
-            Command.Parameters.Add(RefArticleParam);
-            Command.Parameters.Add(DescriptionParam);
-            Command.Parameters.Add(RefSousFamilleParam);
-            Command.Parameters.Add(RefMarqueParam);
-            Command.Parameters.Add(PrixHTParam);
-            Command.Parameters.Add(QuantiteParam);
-
-            return Command.ExecuteNonQuery();
+                    return Command.ExecuteNonQuery();
+                }
+            }
         }
 
         /// <summary>
@@ -123,34 +136,40 @@ namespace Bacchus.src.DAOs
         public Article GetArticle(string RefArticle)
         {
             string Cmd = "SELECT * FROM Articles WHERE RefArticle = '" + RefArticle + "'";
-            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
 
-            using (SQLiteDataReader Reader = Command.ExecuteReader())
+            using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
             {
-                if (Reader.Read())
+                Connection.Open();
+                using (SQLiteCommand Command = new SQLiteCommand(Cmd, Connection))
                 {
-                    DAOMarque daoMarque = new DAOMarque();
-                    DAOFamille daoFamille = new DAOFamille();
-                    DAOSousFamille daoSousFamille = new DAOSousFamille();
-
-                    Article NewArticle = new Article
+                    using (SQLiteDataReader Reader = Command.ExecuteReader())
                     {
-                        // Champs récupérables directement depuis la table SQL
-                        RefArticle = Reader.GetString(0),
-                        Description = Reader.GetString(1),
-                        RefSousFamille = Reader.GetInt16(2),
-                        RefMarque = Reader.GetInt16(3),
-                        PrixHT = Reader.GetFloat(4),
-                        Quantite = Reader.GetInt16(5),
+                        if (Reader.Read())
+                        {
+                            DAOMarque daoMarque = new DAOMarque();
+                            DAOFamille daoFamille = new DAOFamille();
+                            DAOSousFamille daoSousFamille = new DAOSousFamille();
 
-                        // Champs récupérables depuis d'autres tables
-                        Marque = daoMarque.GetNomMarque(Reader.GetInt16(3)),
-                        RefFamille = daoFamille.GetRefFamille(Reader.GetInt16(2)),
-                        Famille = daoFamille.GetNomFamille(daoFamille.GetRefFamille(Reader.GetInt16(2))),
-                        SousFamille = daoSousFamille.GetNomSousFamille(Reader.GetInt16(2))
-                    };
+                            Article NewArticle = new Article
+                            {
+                                // Champs récupérables directement depuis la table SQL
+                                RefArticle = Reader.GetString(0),
+                                Description = Reader.GetString(1),
+                                RefSousFamille = Reader.GetInt16(2),
+                                RefMarque = Reader.GetInt16(3),
+                                PrixHT = Reader.GetFloat(4),
+                                Quantite = Reader.GetInt16(5),
 
-                    return NewArticle;
+                                // Champs récupérables depuis d'autres tables
+                                Marque = daoMarque.GetNomMarque(Reader.GetInt16(3)),
+                                RefFamille = daoFamille.GetRefFamille(Reader.GetInt16(2)),
+                                Famille = daoFamille.GetNomFamille(daoFamille.GetRefFamille(Reader.GetInt16(2))),
+                                SousFamille = daoSousFamille.GetNomSousFamille(Reader.GetInt16(2))
+                            };
+
+                            return NewArticle;
+                        }
+                    }
                 }
             }
 
@@ -166,20 +185,26 @@ namespace Bacchus.src.DAOs
             List<Article> ListeArticles = new List<Article>();
 
             string Cmd = "SELECT RefArticle FROM Articles";
-            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
 
-            // On récupère la liste des RefArticle
-            using (SQLiteDataReader Reader = Command.ExecuteReader())
+            using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
             {
-                while (Reader.Read())
+                Connection.Open();
+                using (SQLiteCommand Command = new SQLiteCommand(Cmd, Connection))
                 {
-                    // Pour chaque RefArticle, on récupère l'article correspondant et on l'ajoute à la liste
-                    Article NewArticle = GetArticle(Reader.GetString(0));
-                    ListeArticles.Add(NewArticle);
+                    // On récupère la liste des RefArticle
+                    using (SQLiteDataReader Reader = Command.ExecuteReader())
+                    {
+                        while (Reader.Read())
+                        {
+                            // Pour chaque RefArticle, on récupère l'article correspondant et on l'ajoute à la liste
+                            Article NewArticle = GetArticle(Reader.GetString(0));
+                            ListeArticles.Add(NewArticle);
+                        }
+                    }
+
+                    return ListeArticles;
                 }
             }
-
-            return ListeArticles;
         }
 
         /// <summary>
@@ -191,19 +216,98 @@ namespace Bacchus.src.DAOs
             List<string> ListeRefArticles = new List<string>();
 
             string Cmd = "SELECT RefArticle FROM Articles";
-            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
 
-            // On récupère la liste des RefArticle
-            using (SQLiteDataReader Reader = Command.ExecuteReader())
+            using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
             {
-                while (Reader.Read())
+                Connection.Open();
+                using (SQLiteCommand Command = new SQLiteCommand(Cmd, Connection))
                 {
-                    ListeRefArticles.Add(Reader.GetString(0));
+                    // On récupère la liste des RefArticle
+                    using (SQLiteDataReader Reader = Command.ExecuteReader())
+                    {
+                        while (Reader.Read())
+                        {
+                            ListeRefArticles.Add(Reader.GetString(0));
+                        }
+                    }
+
+                    return ListeRefArticles;
                 }
             }
-
-            return ListeRefArticles;
         }
 
+        /// <summary>
+        /// Renvoie la liste de tous les articles de la marque "Marque"
+        /// </summary>
+        /// <param name="Marque"></param>
+        /// <returns></returns>
+        public List<Article> GetArticlesWhereMarque(string Marque)
+        {
+            List<Article> ListeArticles = new List<Article>();
+
+            DAOMarque daoMarque = new DAOMarque();
+            int RefMarque = daoMarque.GetRefMarque(Marque);
+
+            string Cmd = "SELECT RefArticle FROM Articles WHERE RefMarque = " + RefMarque;
+
+            using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
+            {
+                Connection.Open();
+                using (SQLiteCommand Command = new SQLiteCommand(Cmd, Connection))
+                {
+                    // On récupère la liste des RefArticle
+                    using (SQLiteDataReader Reader = Command.ExecuteReader())
+                    {
+                        while (Reader.Read())
+                        {
+                            // Pour chaque RefArticle, on récupère l'article correspondant et on l'ajoute à la liste
+                            Article NewArticle = GetArticle(Reader.GetString(0));
+                            ListeArticles.Add(NewArticle);
+                        }
+                    }
+
+                    return ListeArticles;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Renvoie la liste de tous les articles dans la famille "Famille" et la sous-famille "SousFamille"
+        /// </summary>
+        /// <param name="Famille"></param>
+        /// <param name="SousFamille"></param>
+        /// <returns></returns>
+        public List<Article> GetArticlesWhereSousFamille(string Famille, string SousFamille)
+        {
+            List<Article> ListeArticles = new List<Article>();
+
+            DAOSousFamille daoSousFamille = new DAOSousFamille();
+            DAOFamille daoFamille = new DAOFamille();
+
+            int RefFamille = daoFamille.GetRefFamille(Famille);
+            int RefSousFamille = daoSousFamille.GetRefSousFamille(RefFamille, SousFamille);
+
+            string Cmd = "SELECT RefArticle FROM Articles WHERE RefSousFamille = " + RefSousFamille;
+
+            using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
+            {
+                Connection.Open();
+                using (SQLiteCommand Command = new SQLiteCommand(Cmd, Connection))
+                {
+                    // On récupère la liste des articles
+                    using (SQLiteDataReader Reader = Command.ExecuteReader())
+                    {
+                        while (Reader.Read())
+                        {
+                            // Pour chaque RefArticle, on récupère l'article correspondant et on l'ajoute à la liste
+                            Article NewArticle = GetArticle(Reader.GetString(0));
+                            ListeArticles.Add(NewArticle);
+                        }
+                    }
+
+                    return ListeArticles;
+                }
+            }
+        }
     }
 }

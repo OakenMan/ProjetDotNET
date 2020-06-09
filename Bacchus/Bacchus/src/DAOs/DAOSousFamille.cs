@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Bacchus.src.DAOs
 {
-    class DAOSousFamille : DAO
+    class DAOSousFamille
     {
+        protected const string DatabasePath = "Data Source = Bacchus.SQLite;";
 
         /// <summary>
         /// Renvoie une liste contenant le nom de toutes les sous-familles d'une famille de ref "RefFamille"
@@ -21,18 +19,24 @@ namespace Bacchus.src.DAOs
             List<string> ListeSousFamilles = new List<string>();
 
             string Cmd = "SELECT Nom FROM SousFamilles WHERE RefFamille = " + RefFamille;
-            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
 
-            // On récupère la liste des noms de sous-familles appartenant à la famille RefFamille
-            using (SQLiteDataReader Reader = Command.ExecuteReader())
+            using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
             {
-                while (Reader.Read())
+                Connection.Open();
+                using (SQLiteCommand Command = new SQLiteCommand(Cmd, Connection))
                 {
-                    ListeSousFamilles.Add(Reader.GetString(0));
+                    // On récupère la liste des noms de sous-familles appartenant à la famille RefFamille
+                    using (SQLiteDataReader Reader = Command.ExecuteReader())
+                    {
+                        while (Reader.Read())
+                        {
+                            ListeSousFamilles.Add(Reader.GetString(0));
+                        }
+                    }
+
+                    return ListeSousFamilles;
                 }
             }
-
-            return ListeSousFamilles;
         }
 
         /// <summary>
@@ -44,18 +48,24 @@ namespace Bacchus.src.DAOs
         public int GetRefSousFamille(int RefFamille, string NomSousFamille)
         {
             string Cmd = "SELECT RefSousFamille FROM SousFamilles WHERE RefFamille = " + RefFamille + " AND Nom = '" + NomSousFamille + "'";
-            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
 
-            using (SQLiteDataReader Reader = Command.ExecuteReader())
+            using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
             {
-                if (Reader.Read())
+                Connection.Open();
+                using (SQLiteCommand Command = new SQLiteCommand(Cmd, Connection))
                 {
-                    return Reader.GetInt16(0);
-                }
-                else
-                {
-                    Console.WriteLine("La sous-famille [{0}] n'existe pas, on l'ajoute", NomSousFamille);
-                    return AddSousFamille(RefFamille, NomSousFamille);
+                    using (SQLiteDataReader Reader = Command.ExecuteReader())
+                    {
+                        if (Reader.Read())
+                        {
+                            return Reader.GetInt16(0);
+                        }
+                        else
+                        {
+                            Console.WriteLine("La sous-famille [{0}] n'existe pas, on l'ajoute", NomSousFamille);
+                            return AddSousFamille(RefFamille, NomSousFamille);
+                        }
+                    }
                 }
             }
         }
@@ -68,17 +78,23 @@ namespace Bacchus.src.DAOs
         public string GetNomSousFamille(int RefSousFamille)
         {
             string Cmd = "SELECT Nom FROM SousFamilles WHERE RefSousFamille = " + RefSousFamille;
-            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
 
-            using (SQLiteDataReader Reader = Command.ExecuteReader())
+            using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
             {
-                if (Reader.Read())
+                Connection.Open();
+                using (SQLiteCommand Command = new SQLiteCommand(Cmd, Connection))
                 {
-                    return Reader.GetString(0);
+                    using (SQLiteDataReader Reader = Command.ExecuteReader())
+                    {
+                        if (Reader.Read())
+                        {
+                            return Reader.GetString(0);
+                        }
+                    }
+
+                    return null;
                 }
             }
-
-            return null;
         }
 
         /// <summary>
@@ -89,25 +105,36 @@ namespace Bacchus.src.DAOs
         public int AddSousFamille(int RefFamille, string NomSousFamille)
         {
             string Cmd = "INSERT INTO SousFamilles(RefFamille, Nom) VALUES(@RefFamille, @NomSousFamille)";
-            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
 
-            SQLiteParameter RefFamilleParam = new SQLiteParameter("@RefFamille", DbType.Int16) { Value = RefFamille };
-            SQLiteParameter NomSousFamilleParam = new SQLiteParameter("@NomSousFamille", DbType.String) { Value = NomSousFamille };
+            using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
+            {
+                Connection.Open();
+                using (SQLiteCommand Command = new SQLiteCommand(Cmd, Connection))
+                {
+                    SQLiteParameter RefFamilleParam = new SQLiteParameter("@RefFamille", DbType.Int16) { Value = RefFamille };
+                    SQLiteParameter NomSousFamilleParam = new SQLiteParameter("@NomSousFamille", DbType.String) { Value = NomSousFamille };
 
-            Command.Parameters.Add(RefFamilleParam);
-            Command.Parameters.Add(NomSousFamilleParam);
+                    Command.Parameters.Add(RefFamilleParam);
+                    Command.Parameters.Add(NomSousFamilleParam);
 
-            int result = Command.ExecuteNonQuery();
+                    int result = Command.ExecuteNonQuery();
+                }
+            }
 
             Cmd = "SELECT RefSousFamille FROM SousFamilles WHERE RefFamille = " + RefFamille + " AND Nom = '" + NomSousFamille + "'";
-            Command = new SQLiteCommand(Cmd, Connection);
 
-            using (SQLiteDataReader Reader = Command.ExecuteReader())
+            using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
             {
-                Reader.Read();
-                return Reader.GetInt16(0);
+                Connection.Open();
+                using (SQLiteCommand Command = new SQLiteCommand(Cmd, Connection))
+                {
+                    using (SQLiteDataReader Reader = Command.ExecuteReader())
+                    {
+                        Reader.Read();
+                        return Reader.GetInt16(0);
+                    }
+                }
             }
         }
-
     }
 }

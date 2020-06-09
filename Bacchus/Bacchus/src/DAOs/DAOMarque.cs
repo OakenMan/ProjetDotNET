@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SQLite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Bacchus.src.DAOs
 {
-    class DAOMarque : DAO
+    class DAOMarque
     {
+        protected const string DatabasePath = "Data Source = Bacchus.SQLite;";
 
         /// <summary>
         /// Essaye de récupérer la Ref de la marque passée en paramètre.
@@ -20,18 +17,24 @@ namespace Bacchus.src.DAOs
         public int GetRefMarque(string NomMarque)
         {
             string Cmd = "SELECT RefMarque FROM Marques WHERE Nom = '" + NomMarque + "'";
-            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
 
-            using (SQLiteDataReader Reader = Command.ExecuteReader())
+            using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
             {
-                if (Reader.Read())
+                Connection.Open();
+                using (SQLiteCommand Command = new SQLiteCommand(Cmd, Connection))
                 {
-                    return Reader.GetInt16(0);
-                }
-                else
-                {
-                    Console.WriteLine("La marque [{0}] n'existe pas, on l'ajoute", NomMarque);
-                    return AddMarque(NomMarque);
+                    using (SQLiteDataReader Reader = Command.ExecuteReader())
+                    {
+                        if (Reader.Read())
+                        {
+                            return Reader.GetInt16(0);
+                        }
+                        else
+                        {
+                            Console.WriteLine("La marque [{0}] n'existe pas, on l'ajoute", NomMarque);
+                            return AddMarque(NomMarque);
+                        }
+                    }
                 }
             }
         }
@@ -44,17 +47,23 @@ namespace Bacchus.src.DAOs
         public string GetNomMarque(int RefMarque)
         {
             string Cmd = "SELECT Nom FROM Marques WHERE RefMarque = " + RefMarque;
-            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
 
-            using (SQLiteDataReader Reader = Command.ExecuteReader())
+            using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
             {
-                if (Reader.Read())
+                Connection.Open();
+                using (SQLiteCommand Command = new SQLiteCommand(Cmd, Connection))
                 {
-                    return Reader.GetString(0);
+                    using (SQLiteDataReader Reader = Command.ExecuteReader())
+                    {
+                        if (Reader.Read())
+                        {
+                            return Reader.GetString(0);
+                        }
+                    }
+
+                    return null;
                 }
             }
-
-            return null;
         }
 
         /// <summary>
@@ -65,17 +74,29 @@ namespace Bacchus.src.DAOs
         public int AddMarque(string NomMarque)
         {
             string Cmd = "INSERT INTO Marques(Nom) VALUES('" + NomMarque + "')";
-            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
 
-            int result = Command.ExecuteNonQuery();
+            using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
+            {
+                Connection.Open();
+                using (SQLiteCommand Command = new SQLiteCommand(Cmd, Connection))
+                {
+                    Command.ExecuteNonQuery();
+                }
+            }
 
             Cmd = "SELECT RefMarque FROM Marques WHERE Nom = '" + NomMarque + "'";
-            Command = new SQLiteCommand(Cmd, Connection);
 
-            using (SQLiteDataReader Reader = Command.ExecuteReader())
+            using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
             {
-                Reader.Read();
-                return Reader.GetInt16(0);
+                Connection.Open();
+                using (SQLiteCommand Command = new SQLiteCommand(Cmd, Connection))
+                {
+                    using (SQLiteDataReader Reader = Command.ExecuteReader())
+                    {
+                        Reader.Read();
+                        return Reader.GetInt16(0);
+                    }
+                }
             }
         }
 
@@ -88,18 +109,24 @@ namespace Bacchus.src.DAOs
             List<string> ListeMarques = new List<string>();
 
             string Cmd = "SELECT Nom FROM Marques";
-            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
 
-            // On récupère la liste des noms de marques
-            using (SQLiteDataReader Reader = Command.ExecuteReader())
+            using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
             {
-                while (Reader.Read())
+                Connection.Open();
+                using (SQLiteCommand Command = new SQLiteCommand(Cmd, Connection))
                 {
-                    ListeMarques.Add(Reader.GetString(0));
+                    // On récupère la liste des noms de marques
+                    using (SQLiteDataReader Reader = Command.ExecuteReader())
+                    {
+                        while (Reader.Read())
+                        {
+                            ListeMarques.Add(Reader.GetString(0));
+                        }
+                    }
+
+                    return ListeMarques;
                 }
             }
-
-            return ListeMarques;
         }
     }
 }

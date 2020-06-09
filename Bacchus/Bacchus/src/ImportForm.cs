@@ -13,7 +13,7 @@ namespace Bacchus
         public ImportForm()
         {
             InitializeComponent();
-            CenterToScreen();
+            //CenterToScreen();
         }
 
         /// <summary>
@@ -96,8 +96,8 @@ namespace Bacchus
         /// <param name="e"></param>
         private void OverwriteDataButton_Click(object sender, EventArgs e)
         {
-            DAO dao = new DAO();
-            dao.CleanDatabase();
+            DAODatabase daoDatabase = new DAODatabase();
+            daoDatabase.CleanDatabase();
 
             // On désactive les boutons pour éviter que l'utilisateur reclique dessus
             OverwriteDataButton.Enabled = false;
@@ -137,8 +137,6 @@ namespace Bacchus
             // On parse le fichier choisi par l'utilisateur pour récupérer la liste d'articles
             List<Article> ListeArticle = Parser(FileTextBox.Text);
             ProgressBar.Maximum = ListeArticle.Count;
-
-            DAO dao = new DAO();
 
             DAOArticle daoArticle = new DAOArticle();
             // On ajoute chaque article à la BDD (le DAO s'occupe d'ajouter OU de mettre à jour les articles)

@@ -12,6 +12,8 @@ namespace Bacchus
         private string ListViewValue = "";
         private string ListViewValue2 = "";
 
+        private ColumnHeader SortingColumn = null;
+
         /// <summary>
         /// Constructeur
         /// </summary>
@@ -116,12 +118,13 @@ namespace Bacchus
         /// </summary>
         private void RefreshListView()
         {
-            Console.WriteLine("{0}, {1}, {2}, {3}", ListViewDisplay, ListViewCondition, ListViewValue, ListViewValue2);
-
             // Paramètres de la ListView
             ListView.GridLines = true;
-            ListView.FullRowSelect = true;
-            ListView.Sorting = SortOrder.Ascending;
+            ListView.FullRowSelect = true;              // Sélection d'une ligne tout entière
+            ListView.MultiSelect = false;               // Pas possible de sélectionner plusieurs lignes
+            ListView.Sorting = SortOrder.Ascending;     // Mode de tri par défaut
+            
+            //ListView.ContextMenu = ??? aller voir ListView.ContextMenu sur la doc
 
             // On nettoie la ListView
             ListView.Columns.Clear();
@@ -130,12 +133,13 @@ namespace Bacchus
             // Si on veut afficher des articles
             if (ListViewDisplay == "ARTICLES")
             {
+                ListView.Columns.Add("Réference", 75, HorizontalAlignment.Center);
                 ListView.Columns.Add("Description", 150, HorizontalAlignment.Left);
                 ListView.Columns.Add("Famille", 150, HorizontalAlignment.Left);
                 ListView.Columns.Add("Sous-Famille", 150, HorizontalAlignment.Left);
                 ListView.Columns.Add("Marque", 100, HorizontalAlignment.Left);
-                ListView.Columns.Add("PrixHT", 100, HorizontalAlignment.Center);
-                ListView.Columns.Add("Quantité", 100, HorizontalAlignment.Center);
+                ListView.Columns.Add("PrixHT", 75, HorizontalAlignment.Center);
+                ListView.Columns.Add("Quantité", 75, HorizontalAlignment.Center);
             }
             // Si on veut afficher des marques, des familles ou des sous-familles
             else
@@ -143,33 +147,34 @@ namespace Bacchus
                 ListView.Columns.Add("Description", -2, HorizontalAlignment.Left);
             }
 
-            DAOArticle daoArticle = new DAOArticle();
-            DAOMarque daoMarque = new DAOMarque();
-            DAOFamille daoFamille = new DAOFamille();
-            DAOSousFamille daoSousFamille = new DAOSousFamille();
-
-            // Si on veut afficher tous les articles
+            // Si on veut afficher des articles
             if(ListViewDisplay == "ARTICLES")
             {
+                DAOArticle daoArticle = new DAOArticle();
+
                 List<Article> ListeArticles = new List<Article>();
-                
+
+                // Tous les articles
                 if(ListViewCondition == "")
                 {
                     ListeArticles = daoArticle.GetAllArticles();
                 }
+                // Les articles d'une certaine marque
                 else if(ListViewCondition == "MARQUE")
                 {
-                    //ListeArticles = dao.GetArticlesWhereMarque(ListViewValue);
+                    ListeArticles = daoArticle.GetArticlesWhereMarque(ListViewValue);
                 }
+                // Les articles d'une certaine sous-famille
                 else if(ListViewCondition == "SOUSFAMILLE")
                 {
-                    //ListeArticles = dao.GetArticlesWhereSousFamille(ListViewValue2, ListViewValue);
+                    ListeArticles = daoArticle.GetArticlesWhereSousFamille(ListViewValue2, ListViewValue);
                 }
 
                 // Enfin, on ajoute tous les articles à la ListView
                 foreach (Article NewArticle in ListeArticles)
                 {
-                    ListViewItem Item = new ListViewItem(NewArticle.Description);
+                    ListViewItem Item = new ListViewItem(NewArticle.RefArticle);
+                    Item.SubItems.Add(NewArticle.Description);
                     Item.SubItems.Add(NewArticle.Famille);
                     Item.SubItems.Add(NewArticle.SousFamille);
                     Item.SubItems.Add(NewArticle.Marque);
@@ -180,6 +185,8 @@ namespace Bacchus
             }
             else if(ListViewDisplay == "MARQUES")
             {
+                DAOMarque daoMarque = new DAOMarque();
+                
                 List<string> ListeMarques = daoMarque.GetAllMarques();
                 foreach(string Marque in ListeMarques)
                 {
@@ -188,6 +195,8 @@ namespace Bacchus
             }
             else if(ListViewDisplay == "FAMILLES")
             {
+                DAOFamille daoFamille = new DAOFamille();
+                
                 List<string> ListeFamilles = daoFamille.GetAllFamilles();
                 foreach(string Famille in ListeFamilles)
                 {
@@ -196,6 +205,9 @@ namespace Bacchus
             }
             else if(ListViewDisplay == "SOUSFAMILLES")
             {
+                DAOSousFamille daoSousFamille = new DAOSousFamille();
+                DAOFamille daoFamille = new DAOFamille();
+                
                 List<string> ListeSousFamilles = daoSousFamille.GetAllSousFamilles(daoFamille.GetRefFamille(ListViewValue));
                 foreach(string SousFamille in ListeSousFamilles)
                 {
@@ -261,12 +273,88 @@ namespace Bacchus
             // TODO : trouver un moyen d'ignorer la répétition d'inputs
             switch(e.KeyCode)
             {
-                case Keys.Enter:  Console.WriteLine("Enter"); break;
-                case Keys.Delete: Console.WriteLine("Suppr"); break;
-                case Keys.F5:     Console.WriteLine("F5");    break;
+                case Keys.Enter:
+                    ArticleForm Form;
+                    // Ouverture en mode "Création d'article"
+                    if (ListView.SelectedItems.Count == 0)
+                    {
+                        Form = new ArticleForm();
+                    }
+                    // Ouverture en mode "Modification d'article"
+                    else
+                    {
+                        Form = new ArticleForm(ListView.SelectedItems[0].Text);
+                    }
+                    Form.Show();
+                    break;
+                case Keys.Delete:
+                    Console.WriteLine("Suppr");
+                    break;
+                case Keys.F5:
+                    RefreshDisplay();
+                    break;
                 default: break;
             }
             e.Handled = true;
+        }
+
+        /// <summary>
+        /// Event déclenché lors d'un clic de souris sur une colonne de la ListView.
+        /// Trie la ListView en fonction de la colonne sur laquelle on a cliqué
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ListView_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            // On récupère la colonne à trier
+            ColumnHeader NewSortingColumn = ListView.Columns[e.Column];
+
+            // On récupère l'ordre de tri
+            System.Windows.Forms.SortOrder SortOrder;
+            if(SortingColumn == null)
+            {
+                SortOrder = SortOrder.Ascending;
+            }
+            else
+            {
+                // Si c'est la même colonne
+                if(NewSortingColumn == SortingColumn)
+                {
+                    // On inverse l'ordre de tri
+                    if(SortingColumn.Text.StartsWith("> "))
+                    {
+                        SortOrder = SortOrder.Descending;
+                    }
+                    else
+                    {
+                        SortOrder = SortOrder.Ascending;
+                    }
+                }
+                // Sinon on tri dans l'ordre alphabétique
+                else
+                {
+                    SortOrder = SortOrder.Ascending;
+                }
+
+                SortingColumn.Text = SortingColumn.Text.Substring(2);
+            }
+
+            // On affiche le nouvel ordre de tri
+            SortingColumn = NewSortingColumn;
+            if(SortOrder == SortOrder.Ascending)
+            {
+                SortingColumn.Text = "> " + SortingColumn.Text;
+            }
+            else
+            {
+                SortingColumn.Text = "< " + SortingColumn.Text;
+            }
+
+            // On applique le Comparer
+            ListView.ListViewItemSorter = new ListViewComparer(e.Column, SortOrder);
+
+            // Et on trie
+            ListView.Sort();
         }
     }
 }

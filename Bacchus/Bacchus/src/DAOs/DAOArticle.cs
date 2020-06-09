@@ -16,6 +16,7 @@ namespace Bacchus.src.DAOs
         /// <param name="NewArticle"></param>
         public void AddOrUpdateArticle(Article article)
         {
+            bool Update = false;
             string Cmd = "SELECT * FROM Articles WHERE RefArticle = '" + article.RefArticle + "'";
 
             using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
@@ -31,16 +32,25 @@ namespace Bacchus.src.DAOs
                         if (Reader.Read())
                         {
                             Console.WriteLine("L'article {0} existe déjà, on le met à jour", article.RefArticle);
-                            UpdateArticle(article);
+                            Update = true; 
                         }
                         //Si l'article n'existe pas dans la BDD, on l'ajoute
                         else
                         {
                             Console.WriteLine("Ajout de l'article {0}", article.RefArticle);
-                            AddArticle(article);
+                            Update = false;
                         }
                     }
                 }
+            }
+
+            if (Update)
+            {
+                UpdateArticle(article);
+            }
+            else
+            {
+                AddArticle(article);
             }
         }
 
@@ -131,9 +141,15 @@ namespace Bacchus.src.DAOs
         public int DeleteArticle(string RefArticle)
         {
             string Cmd = "DELETE FROM Articles WHERE RefArticle = '" + RefArticle + "'";
-            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
 
-            return Command.ExecuteNonQuery();
+            using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
+            {
+                Connection.Open();
+                using (SQLiteCommand Command = new SQLiteCommand(Cmd, Connection))
+                {
+                    return Command.ExecuteNonQuery();
+                }
+            }
         }
 
         /// <summary>

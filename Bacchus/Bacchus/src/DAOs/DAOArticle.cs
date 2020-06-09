@@ -131,9 +131,15 @@ namespace Bacchus.src.DAOs
         public int DeleteArticle(string RefArticle)
         {
             string Cmd = "DELETE FROM Articles WHERE RefArticle = '" + RefArticle + "'";
-            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
 
-            return Command.ExecuteNonQuery();
+            using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
+            {
+                Connection.Open();
+                using (SQLiteCommand Command = new SQLiteCommand(Cmd, Connection))
+                {
+                    return Command.ExecuteNonQuery();
+                }
+            }      
         }
 
         /// <summary>

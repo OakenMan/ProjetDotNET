@@ -100,6 +100,14 @@ namespace Bacchus.src.DAOs
             }
         }
 
+        public int DeleteMarque(int RefMarque)
+        {
+            string Cmd = "DELETE FROM Marques WHERE RefMarque = " + RefMarque;
+            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
+
+            return Command.ExecuteNonQuery();
+        }
+
         /// <summary>
         /// Renvoie une liste contenant le nom de toutes les marques
         /// </summary>

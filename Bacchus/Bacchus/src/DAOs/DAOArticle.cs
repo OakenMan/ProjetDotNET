@@ -128,6 +128,14 @@ namespace Bacchus.src.DAOs
             }
         }
 
+        public int DeleteArticle(string RefArticle)
+        {
+            string Cmd = "DELETE FROM Articles WHERE RefArticle = '" + RefArticle + "'";
+            SQLiteCommand Command = new SQLiteCommand(Cmd, Connection);
+
+            return Command.ExecuteNonQuery();
+        }
+
         /// <summary>
         /// Renvoie l'article correspondant à RefArticle, ou null si l'article n'a pas été trouvé
         /// </summary>

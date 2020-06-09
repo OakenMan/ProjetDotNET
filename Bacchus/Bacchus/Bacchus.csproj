@@ -65,6 +65,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\SousFamilleForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\SousFamilleForm.Designer.cs">
+      <DependentUpon>SousFamilleForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\MarqueForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\MarqueForm.Designer.cs">
+      <DependentUpon>MarqueForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\FamilleForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\FamilleForm.Designer.cs">
+      <DependentUpon>FamilleForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\ArticleForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -98,6 +116,15 @@
     </Compile>
     <Compile Include="src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="src\SousFamilleForm.resx">
+      <DependentUpon>SousFamilleForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\MarqueForm.resx">
+      <DependentUpon>MarqueForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\FamilleForm.resx">
+      <DependentUpon>FamilleForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="src\ArticleForm.resx">
       <DependentUpon>ArticleForm.cs</DependentUpon>
     </EmbeddedResource>

@@ -52,7 +52,7 @@ namespace Bacchus
             // Si RefArticle est vide ==> création d'un nouvel article
             // Sinon, récupérer l'article avec un DAO et remplir les différents champs avec les valeurs de l'article
         }
-
+        
         public void InitializeComboBox()
         {
             DAOFamille daoFamille = new DAOFamille();

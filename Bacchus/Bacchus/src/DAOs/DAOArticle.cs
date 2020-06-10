@@ -13,7 +13,7 @@ namespace Bacchus.src.DAOs
         /// Ajoute le nouvel article à la BDD. 
         /// Si il est déjà présent (= RefArticle identique), les autres champs sont mis à jour.
         /// </summary>
-        /// <param name="NewArticle"></param>
+        /// <param name="NewArticle">L'article à modifier ou ajouter.</param>
         public void AddOrUpdateArticle(Article article)
         {
             bool Update = false;
@@ -53,7 +53,7 @@ namespace Bacchus.src.DAOs
         /// <summary>
         /// Ajoute un article à la base de données.
         /// </summary>
-        /// <param name="article"></param>
+        /// <param name="article">L'article à ajouter</param>
         /// <returns></returns>
         public int AddArticle(Article article)
         {
@@ -109,7 +109,7 @@ namespace Bacchus.src.DAOs
         /// <summary>
         /// Met à jour un article déjà existant dans la base de données.
         /// </summary>
-        /// <param name="ArticleUpdated"></param>
+        /// <param name="ArticleUpdated">L'article à mettre à jour.</param>
         public int UpdateArticle(Article ArticleUpdated)
         {
             DAOMarque daoMarque = new DAOMarque();
@@ -148,6 +148,11 @@ namespace Bacchus.src.DAOs
             }
         }
 
+        /// <summary>
+        /// Supprime un article de la BDD.
+        /// </summary>
+        /// <param name="RefArticle">La référence de l'article à supprimer.</param>
+        /// <returns></returns>
         public int DeleteArticle(string RefArticle)
         {
             string Cmd = "DELETE FROM Articles WHERE RefArticle = '" + RefArticle + "'";
@@ -163,10 +168,10 @@ namespace Bacchus.src.DAOs
         }
 
         /// <summary>
-        /// Renvoie l'article correspondant à RefArticle, ou null si l'article n'a pas été trouvé
+        /// Renvoie l'article correspondant à RefArticle, ou null si l'article n'a pas été trouvé.
         /// </summary>
-        /// <param name="RefArticle"></param>
-        /// <returns></returns>
+        /// <param name="RefArticle">La référence de l'article à rechercher.</param>
+        /// <returns>L'article rechercher.</returns>
         public Article GetArticle(string RefArticle)
         {
             string Cmd = "SELECT * FROM Articles WHERE RefArticle = '" + RefArticle + "'";
@@ -211,7 +216,7 @@ namespace Bacchus.src.DAOs
         }
 
         /// <summary>
-        /// Renvoie une liste avec tous les articles de la BDD
+        /// Renvoie une liste avec tous les articles de la BDD.
         /// </summary>
         /// <returns></returns>
         public List<Article> GetAllArticles()

@@ -97,7 +97,7 @@ namespace Bacchus.src.DAOs
         }
 
         /// <summary>
-        /// Ajoute une sous-famille à la BDD et renvoie sa Ref
+        /// Ajoute une sous-famille à la BDD et renvoie sa référence.
         /// </summary>
         /// <param name="NomMarque"></param>
         /// <returns></returns>
@@ -136,6 +136,11 @@ namespace Bacchus.src.DAOs
             }
         }
 
+        /// <summary>
+        /// Supprime une sous-famille de la BDD.
+        /// </summary>
+        /// <param name="RefSousFamille"></param>
+        /// <returns></returns>
         public int DeleteSousFamille(int RefSousFamille)
         {
             string Cmd = "DELETE FROM SousFamilles WHERE RefSousFamille = " + RefSousFamille;
@@ -150,6 +155,12 @@ namespace Bacchus.src.DAOs
             }
         }
 
+        /// <summary>
+        /// Met à jour une sous-famille de la BDD.
+        /// </summary>
+        /// <param name="RefSousFamille"></param>
+        /// <param name="Nom"></param>
+        /// <returns></returns>
         public int UpdateSousFamille(int RefSousFamille, string Nom)
         {
             string Cmd = "UPDATE SousFamilles " +

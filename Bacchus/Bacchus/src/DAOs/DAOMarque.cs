@@ -99,6 +99,11 @@ namespace Bacchus.src.DAOs
             }
         }
 
+        /// <summary>
+        /// Supprime une marque de la BDD.
+        /// </summary>
+        /// <param name="RefMarque"></param>
+        /// <returns></returns>
         public int DeleteMarque(int RefMarque)
         {
             string Cmd = "DELETE FROM Marques WHERE RefMarque = " + RefMarque;
@@ -113,6 +118,12 @@ namespace Bacchus.src.DAOs
             }
         }
 
+        /// <summary>
+        /// Met à jour une marque de la BDD.
+        /// </summary>
+        /// <param name="RefMarque"></param>
+        /// <param name="Nom"></param>
+        /// <returns></returns>
         public int UpdateMarque(int RefMarque, string Nom)
         {
             string Cmd = "UPDATE Marques " +
@@ -130,7 +141,7 @@ namespace Bacchus.src.DAOs
         }
 
         /// <summary>
-        /// Renvoie une liste contenant le nom de toutes les marques
+        /// Renvoie une liste contenant le nom de toutes les marques.
         /// </summary>
         /// <returns></returns>
         public List<string> GetAllMarques()

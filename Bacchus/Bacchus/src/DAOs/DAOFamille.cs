@@ -9,7 +9,7 @@ namespace Bacchus.src.DAOs
         protected const string DatabasePath = "Data Source = Bacchus.SQLite;";
 
         /// <summary>
-        /// Renvoie une liste contenant le nom de toutes les familles
+        /// Renvoie une liste contenant le nom de toutes les familles.
         /// </summary>
         /// <returns></returns>
         public List<string> GetAllFamilles()
@@ -150,6 +150,12 @@ namespace Bacchus.src.DAOs
             }
         }
 
+        /// <summary>
+        /// Supprime une famille de la BDD.
+        /// Supprime aussi toute les sous-famille associée.
+        /// </summary>
+        /// <param name="RefFamille"></param>
+        /// <returns></returns>
         public int DeleteFamille(int RefFamille)
         {
             // Supprime toutes les sous-familles appartenant à cette famille
@@ -181,6 +187,12 @@ namespace Bacchus.src.DAOs
             }
         }
 
+        /// <summary>
+        /// Met à jour une famille dans la BDD.
+        /// </summary>
+        /// <param name="RefFamille"></param>
+        /// <param name="Nom"></param>
+        /// <returns></returns>
         public int UpdateFamille(int RefFamille, string Nom)
         {
             string Cmd = "UPDATE Familles " +

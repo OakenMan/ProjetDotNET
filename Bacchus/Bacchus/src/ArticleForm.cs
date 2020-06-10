@@ -56,6 +56,9 @@ namespace Bacchus
             // Sinon, récupérer l'article avec un DAO et remplir les différents champs avec les valeurs de l'article
         }
         
+        /// <summary>
+        /// Charge les données de chaque ComboBox (ie : La liste des familles, La liste des sous familles de cette famille et la liste des marques)
+        /// </summary>
         public void InitializeComboBox()
         {
             DAOFamille daoFamille = new DAOFamille();
@@ -87,7 +90,6 @@ namespace Bacchus
                     Console.WriteLine("Erreur sur l'indice de la sous famille de l'article dans la SousFamilleComboBox");
                 }
             }
-            FamilleComboBox.SelectedIndexChanged += new EventHandler(FamilleComboBox_OnSelectedIndexChanged);
             
             MarqueComboBox.Items.AddRange(daoMarque.GetAllMarques().ToArray<object>());
             if (Mode == ModeEnum.Edit)
@@ -102,35 +104,6 @@ namespace Bacchus
                     Console.WriteLine("Erreur sur l'indice de la marque de l'article dans la MarqueComboBox");
                 }
             }
-        }
-
-        public void FamilleComboBox_OnSelectedIndexChanged(object sender, EventArgs e)
-        {
-            DAOFamille daoFamille = new DAOFamille();
-            DAOSousFamille daoSousFamille = new DAOSousFamille();
-
-            SousFamilleComboBox.Items.Clear();
-            LoadSousFamilleComboBox(daoFamille.GetRefFamille(FamilleComboBox.SelectedItem.ToString()));
-            //Si le on modifie un article et que on reselectionne sa famille initiale, on remet la valeur de la sous famille comme initiale
-            if (Mode == ModeEnum.Edit && string.Compare(article.Famille, FamilleComboBox.SelectedItem.ToString()) == 0)
-            {
-                int index = GetIndexOfItem(daoSousFamille.GetNomSousFamille(article.RefSousFamille), SousFamilleComboBox.Items);
-                if (index != -1)
-                {
-                    SousFamilleComboBox.SelectedIndex = index;
-                }
-                else
-                {
-                    Console.WriteLine("Erreur sur l'indice de la sous famille de l'article dans la SousFamilleComboBox");
-                }
-            }
-            //Sinon, on met juste la valeur de l'indice de la combo box à 0
-            else
-            {
-                SousFamilleComboBox.SelectedIndex = 0;
-            }
-
-            CheckFields();
         }
 
         public void LoadSousFamilleComboBox(int RefFamille)
@@ -264,6 +237,35 @@ namespace Bacchus
 
         private void PrixTextBox_TextChanged(object sender, EventArgs e)
         {
+            CheckFields();
+        }
+
+        private void FamilleComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DAOFamille daoFamille = new DAOFamille();
+            DAOSousFamille daoSousFamille = new DAOSousFamille();
+
+            SousFamilleComboBox.Items.Clear();
+            LoadSousFamilleComboBox(daoFamille.GetRefFamille(FamilleComboBox.SelectedItem.ToString()));
+            //Si le on modifie un article et que on reselectionne sa famille initiale, on remet la valeur de la sous famille comme initiale
+            if (Mode == ModeEnum.Edit && string.Compare(article.Famille, FamilleComboBox.SelectedItem.ToString()) == 0)
+            {
+                int index = GetIndexOfItem(daoSousFamille.GetNomSousFamille(article.RefSousFamille), SousFamilleComboBox.Items);
+                if (index != -1)
+                {
+                    SousFamilleComboBox.SelectedIndex = index;
+                }
+                else
+                {
+                    Console.WriteLine("Erreur sur l'indice de la sous famille de l'article dans la SousFamilleComboBox");
+                }
+            }
+            //Sinon, on met juste la valeur de l'indice de la combo box à 0
+            else
+            {
+                SousFamilleComboBox.SelectedIndex = 0;
+            }
+
             CheckFields();
         }
     }

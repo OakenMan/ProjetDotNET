@@ -48,6 +48,7 @@ namespace Bacchus.src.DAOs
         public int GetRefSousFamille(int RefFamille, string NomSousFamille)
         {
             string Cmd = "SELECT RefSousFamille FROM SousFamilles WHERE RefFamille = " + RefFamille + " AND Nom = '" + NomSousFamille + "'";
+
             using (SQLiteConnection Connection = new SQLiteConnection(DatabasePath))
             {
                 Connection.Open();

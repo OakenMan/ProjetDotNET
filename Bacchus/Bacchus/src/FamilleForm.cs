@@ -15,6 +15,10 @@ namespace Bacchus
     {
         string Famille = "";
 
+        /// <summary>
+        /// Constructeur
+        /// </summary>
+        /// <param name="Famille"></param>
         public FamilleForm(string Famille = "")
         {
             InitializeComponent();
@@ -43,6 +47,12 @@ namespace Bacchus
             }
         }
 
+        /// <summary>
+        /// Event déclenché lors d'un clic sur le bouton de confirmation.
+        /// Ajoute ou modifie la famille
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ConfirmButton_Click(object sender, EventArgs e)
         {
             DAOFamille daoFamille = new DAOFamille();
@@ -61,6 +71,12 @@ namespace Bacchus
             }
         }
 
+        /// <summary>
+        /// Event déclenché lorsque le texte de la NameTextBox change.
+        /// Utilisé pour vérifié la validité des champs entrés par l'utilisateur.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void NameTextBox_TextChanged(object sender, EventArgs e)
         {
             if(NameTextBox.Text == "")

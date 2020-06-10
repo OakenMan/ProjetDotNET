@@ -325,7 +325,7 @@ namespace Bacchus
                         Found = true;
                     }
                 }
-                if(Found)
+                if(!Found)
                 {
                     Message = "Êtes vous sur de supprimer la famille [" + SelectedItem + "] ? \n" +
                      "Toutes les sous-familles seront supprimées. Cette action est irréversible.";

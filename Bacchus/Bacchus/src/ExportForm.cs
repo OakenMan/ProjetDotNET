@@ -13,13 +13,10 @@ namespace Bacchus
         public ExportForm()
         {
             InitializeComponent();
-            //CenterToScreen();
         }
 
         private void CreateCSV(string FilePath, List<Article> ListeArticles)
         {
-            Console.WriteLine("création du csv à {0} avec {1} articles", FilePath, ListeArticles.Count);
-
             FileStream Stream = new FileStream(FilePath, FileMode.OpenOrCreate);
             using (StreamWriter Writer = new StreamWriter(Stream, Encoding.Default))
             {
@@ -43,13 +40,11 @@ namespace Bacchus
 
             // Récupère la liste de tous les RefArticle
             List<string> ListeRefArticles = daoArticle.GetAllRefArticles();
-            Console.WriteLine("nombre de ref articles = " + ListeRefArticles.Count);
             ProgressBar.Maximum = ListeRefArticles.Count();
 
             // Pour chaque RefArticle, on récupère l'article correspondant et on l'ajoute à la liste
             foreach(string RefArticle in ListeRefArticles)
             {
-                Console.WriteLine("récupération de l'article " + RefArticle);
                 ListeArticles.Add(daoArticle.GetArticle(RefArticle));
                 ProgressBar.PerformStep();
             }

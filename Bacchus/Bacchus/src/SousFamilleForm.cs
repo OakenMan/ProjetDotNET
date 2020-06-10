@@ -16,14 +16,17 @@ namespace Bacchus
         string Famille = "";
         string SousFamille = "";
 
+        /// <summary>
+        /// Constructeur
+        /// </summary>
+        /// <param name="Famille"></param>
+        /// <param name="SousFamille"></param>
         public SousFamilleForm(string Famille = "", string SousFamille = "")
         {
             InitializeComponent();
 
             this.Famille = Famille;
             this.SousFamille = SousFamille;
-
-            Console.WriteLine("famille=" + Famille + ", sousfamille=" + SousFamille);
 
             // On remplit la combo box
             DAOFamille daoFamille = new DAOFamille();
@@ -58,6 +61,12 @@ namespace Bacchus
             UpdateConfirmButton();
         }
 
+        /// <summary>
+        /// Event déclenché lors d'un clic sur le bouton de confirmation.
+        /// Ajoute ou modifie la sous-famille.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ConfirmButton_Click(object sender, EventArgs e)
         {
             DAOFamille daoFamille = new DAOFamille();
@@ -79,11 +88,29 @@ namespace Bacchus
             }
         }
 
+        /// <summary>
+        /// Event déclenché lorsque le texte de la NameTextBox change.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void NameTextBox_TextChanged(object sender, EventArgs e)
         {
             UpdateConfirmButton();
         }
 
+        /// <summary>
+        /// Event déclenché lorsque l'item sélectionné dans la ComboBox change
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FamilleComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateConfirmButton();
+        }
+
+        /// <summary>
+        /// Fonction qui active ou non le bouton de confirmation en fonction de la validité des champs.
+        /// </summary>
         private void UpdateConfirmButton()
         {
             if(NameTextBox.Text != "" && FamilleComboBox.SelectedIndex != -1)
@@ -96,9 +123,6 @@ namespace Bacchus
             }
         }
 
-        private void FamilleComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            UpdateConfirmButton();
-        }
+        
     }
 }

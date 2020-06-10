@@ -23,8 +23,6 @@ namespace Bacchus
             this.Famille = Famille;
             this.SousFamille = SousFamille;
 
-            Console.WriteLine("famille=" + Famille + ", sousfamille=" + SousFamille);
-
             // On remplit la combo box
             DAOFamille daoFamille = new DAOFamille();
             DAOSousFamille daoSousFamille = new DAOSousFamille();

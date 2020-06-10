@@ -415,8 +415,6 @@ namespace Bacchus
         /// <param name="e"></param>
         private void TreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            Console.WriteLine("click");
-
             ListViewDisplay = "";
             ListViewCondition = "";
             ListViewValue = "";

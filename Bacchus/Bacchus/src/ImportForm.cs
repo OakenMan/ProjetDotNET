@@ -50,7 +50,7 @@ namespace Bacchus
         }
 
         /// <summary>
-        /// Parse le fichier pour récupèrer la liste d'articles
+        /// Parse le fichier pour récupèrer la liste d'articles.
         /// </summary>
         /// <param name="FilePath">Le fichier à parser</param>
         /// <returns>Une liste d'articles contenus dans le fichier ciblé par "FilePath"</returns>

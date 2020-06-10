@@ -276,7 +276,7 @@ namespace Bacchus.src.DAOs
         }
 
         /// <summary>
-        /// Renvoie la liste de tous les articles de la marque "Marque"
+        /// Renvoie la liste de tous les articles de la marque "Marque".
         /// </summary>
         /// <param name="Marque"></param>
         /// <returns></returns>
@@ -311,7 +311,7 @@ namespace Bacchus.src.DAOs
         }
 
         /// <summary>
-        /// Renvoie la liste de tous les articles dans la famille "Famille" et la sous-famille "SousFamille"
+        /// Renvoie la liste de tous les articles dans la famille "Famille" et la sous-famille "SousFamille".
         /// </summary>
         /// <param name="Famille"></param>
         /// <param name="SousFamille"></param>

@@ -65,8 +65,9 @@ namespace Bacchus
             DAOSousFamille daoSousFamille = new DAOSousFamille();
             DAOMarque daoMarque = new DAOMarque();
 
+            //On charge la liste des familles
             FamilleComboBox.Items.AddRange(daoFamille.GetAllFamilles().ToArray<object>());
-            //Si on modifie un article, on initialise la valeur de la combo box sur la famille de l'article
+            //Si on modifie un article, on initialise la valeur de la comboBox correspondante à la famille originale de l'article
             if (Mode == ModeEnum.Edit)
             {
                 int index = GetIndexOfItem(article.Famille, FamilleComboBox.Items);
@@ -79,7 +80,10 @@ namespace Bacchus
                     Console.WriteLine("Erreur sur l'indice de la famille de l'article dans la FamilleComboBox");
                 }
 
+                //On charge la liste des sous-familles de la famille sélectionnée
                 LoadSousFamilleComboBox(article.RefFamille);
+                //Si la famille actuellement sélectionnée est celle de l'article pré-modification (originale), alors on initialise la valeur de la comboBox correspondante à la sous-famille
+                //originale de l'article
                 index = GetIndexOfItem(daoSousFamille.GetNomSousFamille(article.RefSousFamille), SousFamilleComboBox.Items);
                 if (index != -1)
                 {
@@ -91,7 +95,9 @@ namespace Bacchus
                 }
             }
             
+            //On charge la liste des marques
             MarqueComboBox.Items.AddRange(daoMarque.GetAllMarques().ToArray<object>());
+            //Si on modifie un article, on initialise la valeur de la comboBox correspondante à la marque originale de l'article
             if (Mode == ModeEnum.Edit)
             {
                 int index = GetIndexOfItem(article.Marque, MarqueComboBox.Items);
@@ -106,12 +112,24 @@ namespace Bacchus
             }
         }
 
+        /// <summary>
+        /// On charge la liste des sous-famille d'une certaine famille (spécifiée par sa référence)
+        /// </summary>
+        /// <param name="RefFamille"></param>
         public void LoadSousFamilleComboBox(int RefFamille)
         {
             DAOSousFamille daoSousFamille = new DAOSousFamille();
             SousFamilleComboBox.Items.AddRange(daoSousFamille.GetAllSousFamilles(RefFamille).ToArray<object>());
         }
 
+        /// <summary>
+        /// Recherche un objet au sein d'une liste d'objet appartenant à une comboBox et renvoie son indice si il existe.
+        /// </summary>
+        /// <param name="Item">L'objet à rechercher.</param>
+        /// <param name="Items">La liste d'objet dans la ComboBox.</param>
+        /// <returns>
+        /// L'indice de l'objet "Item" au sein de la liste "Items" si il s'y trouve, -1 sinon.
+        /// </returns>
         public int GetIndexOfItem(string Item, ComboBox.ObjectCollection Items)
         {
             for (uint i = 0; i < Items.Count; i++)
@@ -125,6 +143,10 @@ namespace Bacchus
             return -1;
         }
 
+        /// <summary>
+        /// Initialise les champs "Référence", "Description", "Prix HT" et quantité en fonction d'un article
+        /// </summary>
+        /// <param name="RefArticle">Article à partir duquel initialiser les champs énoncés plus haut.</param>
         public void LoadArticle(string RefArticle)
         {
             RefTextBox.Text = article.RefArticle;
@@ -133,15 +155,18 @@ namespace Bacchus
             QuantiteNumericUpDown.Value = article.Quantite;
         }
 
+        /// <summary>
+        /// Valide la création ou la modification d'un article dans la BDD.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ConfirmButton_Click(object sender, EventArgs e)
         {
             DAOArticle daoArticle = new DAOArticle();
             DAOFamille daoFamille = new DAOFamille();
             DAOSousFamille daoSousFamille = new DAOSousFamille();
             DAOMarque daoMarque = new DAOMarque();
-
-            //Si oui :
-            //Création de l'objet Article à partir des informations contenues dans les champs précédants
+            
             article.RefArticle = RefTextBox.Text;
             article.Description = DescTextBox.Text;
 
@@ -156,23 +181,20 @@ namespace Bacchus
 
             article.PrixHT = float.Parse(PrixTextBox.Text);
             article.Quantite = (int)QuantiteNumericUpDown.Value;
-
-            Console.WriteLine("Article modifié : {0}", article);
+            
             daoArticle.AddOrUpdateArticle(article);
-            //Si non:
-            //Affichage message d'erreur
             Close();
         }
 
         /// <summary>
-        /// On regarde si chaque champs a une valeur valide
+        /// Vérifie si chaque champs a une valeur valide
         /// Desc         : Champ non null
         /// Famille      : Champ non null
         /// Sous Famille : Champ non null
         /// Marque       : Champ non null
         /// Prix         : float (virgule et pas point)
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Vrai si tout les champs sont valides, faux sinon.</returns>
         public bool AreFieldsValid()
         {
             if (string.Compare(DescTextBox.Text, "") == 0)
@@ -208,6 +230,9 @@ namespace Bacchus
             return true;
         }
 
+        /// <summary>
+        /// Active ou désactive le bouton de validation des modifications en fonction de la validité de chacun des champs.
+        /// </summary>
         public void CheckFields()
         {
             if (AreFieldsValid())
@@ -240,6 +265,11 @@ namespace Bacchus
             CheckFields();
         }
 
+        /// <summary>
+        /// Recharge la liste de sous-famille de la comboBox correspondante lorsque la famille sélectionnée change.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void FamilleComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             DAOFamille daoFamille = new DAOFamille();
@@ -247,7 +277,7 @@ namespace Bacchus
 
             SousFamilleComboBox.Items.Clear();
             LoadSousFamilleComboBox(daoFamille.GetRefFamille(FamilleComboBox.SelectedItem.ToString()));
-            //Si le on modifie un article et que on reselectionne sa famille initiale, on remet la valeur de la sous famille comme initiale
+            //Si on modifie un article et qu'on resélectionne sa famille initiale, on initialise l'index de la comboBox à celui de la sous famille initiale.
             if (Mode == ModeEnum.Edit && string.Compare(article.Famille, FamilleComboBox.SelectedItem.ToString()) == 0)
             {
                 int index = GetIndexOfItem(daoSousFamille.GetNomSousFamille(article.RefSousFamille), SousFamilleComboBox.Items);
